@@ -9,7 +9,7 @@ Sometimes you need to know which routes are covered by your rails test suite.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'routes_coverage'
+gem 'routes_coverage', group: :test
 ```
 
 And then execute:
@@ -22,7 +22,39 @@ Or install it yourself as:
 
 ## Usage
 
-Install the gem and run your tests.
+Install the gem and run your tests. By default you'll see something like:
+
+    # Running tests:
+
+    ....
+
+    Finished tests in 0.037646s, 106.2530 tests/s, 106.2530 assertions/s.
+
+    4 tests, 4 assertions, 0 failures, 0 errors, 0 skips
+    Routes coverage is 11.1% (1 of 9 routes hit at 1.0 hits average)
+
+To get more detailed information add `RoutesCoverage.settings.format = :full_text` somewhere in your test helper:
+
+    4 tests, 4 assertions, 0 failures, 0 errors, 0 skips
+
+    Routes coverage is 11.1% (1 of 9 routes hit at 1.0 hits average)
+    Coverage failed. Need at least 8
+
+    Covered routes:
+          Prefix Verb URI Pattern             Controller#Action
+    current_reqs POST /reqs/current(.:format) dummy#current
+
+    Pending routes:
+      Prefix Verb   URI Pattern              Controller#Action
+        reqs GET    /reqs(.:format)          dummy#index
+             POST   /reqs(.:format)          dummy#create
+     new_req GET    /reqs/new(.:format)      dummy#new
+    edit_req GET    /reqs/:id/edit(.:format) dummy#edit
+         req GET    /reqs/:id(.:format)      dummy#show
+             PATCH  /reqs/:id(.:format)      dummy#update
+             PUT    /reqs/:id(.:format)      dummy#update
+             DELETE /reqs/:id(.:format)      dummy#destroy
+
 
 ## Development
 

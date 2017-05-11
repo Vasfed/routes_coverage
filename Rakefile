@@ -13,5 +13,3 @@ task :default => :spec
 
 $:.push File.expand_path("../lib", __FILE__)
 require 'routes_coverage/version'
-
-Bundler::GemHelper.install_tasks
