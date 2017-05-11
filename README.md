@@ -1,8 +1,8 @@
 # RoutesCoverage
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/routes_coverage`. To experiment with that code, run `bin/console` for an interactive prompt.
+Sometimes you need to know which routes are covered by your rails test suite.
 
-TODO: Delete this and the text above, and describe your gem
+(more detailed readme coming soon)
 
 ## Installation
 
@@ -22,7 +22,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Install the gem and run your tests.
 
 ## Development
 
@@ -32,10 +32,9 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/routes_coverage.
+Bug reports and pull requests are welcome on GitHub at https://github.com/Vasfed/routes_coverage.
 
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
