@@ -68,6 +68,33 @@ end
       DELETE /reqs/:id(.:format)      dummy#destroy
 
 
+### Configuration
+
+Set options in `RoutesCoverage.settings` or rspec's `config.routes_coverage`:
+
+```ruby
+RSpec.configure do |config|
+  config.routes_coverage.format = :full_text
+  config.routes_coverage.exclude_patterns << %r{PATCH /reqs}   # excludes all requests matching regex
+  config.routes_coverage.exclude_namespaces << 'somenamespace' # excludes /somenamespace/*
+  config.routes_coverage.minimum_coverage = 80 # %, your coverage goal
+  config.routes_coverage.round_precision = 0   # just round to whole percents
+end
+```
+
+or
+
+```ruby
+RoutesCoverage.configure do |config|
+  config.format = :full_text
+  # ...
+end
+```
+
+
+Excluded routes do not show in pending, but are shown if they're hit.
+
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

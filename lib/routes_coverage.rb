@@ -41,6 +41,10 @@ module RoutesCoverage
     @@settings ||= Settings.new
   end
 
+  def self.configure
+    yield self.settings
+  end
+
   mattr_reader :current_result
   mattr_reader :pid
 

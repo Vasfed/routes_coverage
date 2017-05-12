@@ -25,7 +25,15 @@ end
 
 DummyApplication.initialize!
 DummyApplication.routes.draw do
-  resources :reqs, controller: :dummy do
+  resources :reqs, only:[:index, :update], controller: :dummy do
     post :current, on: :collection
+  end
+
+  namespace :somespace do
+    resources :foo, only:[:index]
+  end
+
+  namespace :otherspace do
+    resources :bar, only:[:index]
   end
 end
