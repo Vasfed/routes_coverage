@@ -1,18 +1,14 @@
 module RoutesCoverage
   class Result
-    def initialize
-      @route_hits = Hash.new(0)
+    def initialize all_routes, hit_routes, settings
+      @all_routes = all_routes
+      @route_hit_counts = hit_routes
+      @settings = settings
     end
 
-    attr_reader :route_hits
+    attr_reader :all_routes
 
-    def touch_route route
-      @route_hits[route] += 1
-    end
-
-    def all_routes
-      ::Rails.application.routes.routes.routes
-    end
+    attr_reader :route_hit_counts
 
     def expected_routes
       return @expected_routes if @expected_routes
@@ -24,14 +20,14 @@ module RoutesCoverage
       end
 
       excluded_routes = []
-      regex = Regexp.union(RoutesCoverage.settings.exclude_patterns)
+      regex = Regexp.union(@settings.exclude_patterns)
       routes.reject!{|r|
         if "#{r.verb.to_s[8..-3]} #{r.path.spec}".strip =~ regex
           excluded_routes << r
         end
       }
 
-      namespaces_regex = Regexp.union(RoutesCoverage.settings.exclude_namespaces.map{|n| /^\/#{n}/})
+      namespaces_regex = Regexp.union(@settings.exclude_namespaces.map{|n| /^\/#{n}/})
       routes.reject!{|r|
         if r.path.spec.to_s =~ namespaces_regex
           excluded_routes << r
@@ -53,12 +49,12 @@ module RoutesCoverage
 
     def hit_routes
       #TODO: sort?
-      route_hits.keys
+      @route_hit_counts.keys
     end
 
 
     def hit_routes_count
-      route_hits.size
+      @route_hit_counts.size
     end
 
     def expected_routes_count
@@ -75,15 +71,15 @@ module RoutesCoverage
 
     def coverage
       return 'n/a' unless expected_routes.any?
-      (hit_routes_count * 100.0 / expected_routes_count).round(RoutesCoverage.settings.round_precision)
+      (hit_routes_count * 100.0 / expected_routes_count).round(@settings.round_precision)
     end
 
     def avg_hits
-      (route_hits.values.sum.to_f / hit_routes_count).round(RoutesCoverage.settings.round_precision)
+      (@route_hit_counts.values.sum.to_f / hit_routes_count).round(@settings.round_precision)
     end
 
     def coverage_pass?
-      !RoutesCoverage.settings.minimum_coverage || (coverage >= RoutesCoverage.settings.minimum_coverage)
+      !@settings.minimum_coverage || (coverage >= @settings.minimum_coverage)
     end
   end
 end

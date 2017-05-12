@@ -45,16 +45,19 @@ module RoutesCoverage
     yield self.settings
   end
 
-  mattr_reader :current_result
   mattr_reader :pid
 
   def self.reset!
-    @@current_result = Result.new
+    @@route_hit_count = Hash.new(0)
     @@pid = Process.pid
   end
 
   def self.perform_report
-    result = current_result
+    result = Result.new(
+      ::Rails.application.routes.routes.routes,
+      @@route_hit_count,
+      settings
+    )
 
     formatter_class = case settings.format
     when :full_text
@@ -66,9 +69,16 @@ module RoutesCoverage
     end
 
     formatter = formatter_class.new(result, settings)
+
+    puts
     puts formatter.format
   end
 
+
+  def self._touch_route route
+    reset! unless @@route_hit_count
+    @@route_hit_count[route] += 1
+  end
 end
 
 if RoutesCoverage.enabled?

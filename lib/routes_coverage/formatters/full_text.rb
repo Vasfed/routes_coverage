@@ -50,7 +50,7 @@ module RoutesCoverage
             if @output_hits
               # hits = " ?"
               original_route = r[:original].__getobj__ # SimpleDelegator
-              hits = " #{@result.route_hits[original_route]}"
+              hits = " #{@result.route_hit_counts[original_route]}"
             end
             "#{r[:name].rjust(name_width) if @output_prefix} #{r[:verb].ljust(verb_width)} #{r[:path].ljust(path_width)} #{r[:reqs].ljust(reqs_width)}#{hits}"
           end
@@ -91,7 +91,7 @@ module RoutesCoverage
       end
 
       def format
-        "\nRoutes coverage is #{result.coverage}% (#{hits_count})#{status}\n\n#{hit_routes}"
+        "Routes coverage is #{result.coverage}% (#{hits_count})#{status}\n\n#{hit_routes}"
       end
     end
   end

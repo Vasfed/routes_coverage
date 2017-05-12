@@ -23,7 +23,7 @@ module RoutesCoverage
       end
 
       def format
-        "\nRoutes coverage is #{result.coverage}% (#{hits_count})#{status}"
+        "Routes coverage is #{result.coverage}% (#{hits_count})#{status}"
       end
     end
   end
