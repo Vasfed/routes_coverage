@@ -2,6 +2,7 @@ require "routes_coverage/version"
 require "routes_coverage/result"
 require "routes_coverage/middleware"
 
+require "routes_coverage/formatters/base"
 require "routes_coverage/formatters/summary_text"
 require "routes_coverage/formatters/full_text"
 
@@ -31,6 +32,19 @@ module RoutesCoverage
       @round_precision = 1
       @format = :summary_text
     end
+
+    def formatter_class
+      case format
+      when :full_text
+        Formatters::FullText
+      when :summary_text
+        Formatters::SummaryText
+      when Formatters::Base
+        format
+      else
+        raise "Unknown formatter #{settings.format.inspect}"
+      end
+    end
   end
 
   def self.enabled?
@@ -53,22 +67,20 @@ module RoutesCoverage
   end
 
   def self.perform_report
+
+    all_routes = ::Rails.application.routes.routes.routes.dup
+
+    if defined?(::Sprockets) && defined?(::Sprockets::Environment)
+      all_routes.reject!{|r| r.app.is_a?(::Sprockets::Environment) }
+    end
+
     result = Result.new(
-      ::Rails.application.routes.routes.routes,
+      all_routes,
       @@route_hit_count,
       settings
     )
 
-    formatter_class = case settings.format
-    when :full_text
-      Formatters::FullText
-    when :summary_text
-      Formatters::SummaryText
-    else
-      raise "Unknown formatter #{settings.format.inspect}"
-    end
-
-    formatter = formatter_class.new(result, settings)
+    formatter = settings.formatter_class.new(result, settings)
 
     puts
     puts formatter.format

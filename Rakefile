@@ -11,6 +11,7 @@ end
 
 Rake::TestTask.new(:dummytest) do |t| t.pattern = 'spec/fixtures/dummy_test.rb' end
 Rake::TestTask.new(:dummytest_full) do |t| t.pattern = 'spec/fixtures/dummy_test_full.rb' end
+Rake::TestTask.new(:dummytest_filter) do |t| t.pattern = 'spec/fixtures/dummy_test_nsfilters.rb' end
 
 
 task :default => :spec

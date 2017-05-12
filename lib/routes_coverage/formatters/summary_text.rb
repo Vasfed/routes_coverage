@@ -1,14 +1,6 @@
 module RoutesCoverage
   module Formatters
-    class SummaryText
-      def initialize result, settings
-        @result = result
-        @settings = settings
-      end
-
-      attr_reader :result
-      attr_reader :settings
-
+    class SummaryText < Base
       def hits_count
         "#{result.hit_routes_count} of #{result.expected_routes_count}#{"(#{result.total_count} total)" if result.expected_routes_count != result.total_count} routes hit#{ " at #{result.avg_hits} hits average" if result.hit_routes_count > 0}"
       end

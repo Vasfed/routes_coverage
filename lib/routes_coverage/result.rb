@@ -13,29 +13,18 @@ module RoutesCoverage
     def expected_routes
       return @expected_routes if @expected_routes
 
-      routes = all_routes.dup
-
-      if defined?(::Sprockets) && defined?(::Sprockets::Environment)
-        routes.reject!{|r| r.app.is_a?(::Sprockets::Environment) }
-      end
-
-      excluded_routes = []
-      regex = Regexp.union(@settings.exclude_patterns)
-      routes.reject!{|r|
-        if "#{r.verb.to_s[8..-3]} #{r.path.spec}".strip =~ regex
-          excluded_routes << r
-        end
-      }
-
+      filter_regex = Regexp.union(@settings.exclude_patterns)
       namespaces_regex = Regexp.union(@settings.exclude_namespaces.map{|n| /^\/#{n}/})
-      routes.reject!{|r|
-        if r.path.spec.to_s =~ namespaces_regex
-          excluded_routes << r
-        end
+
+      routes_groups = all_routes.group_by{|r|
+        !!(
+          ("#{r.verb.to_s[8..-3]} #{r.path.spec}".strip =~ filter_regex) ||
+          (r.path.spec.to_s =~ namespaces_regex)
+        )
       }
 
-      @excluded_routes = excluded_routes
-      @expected_routes = routes
+      @excluded_routes = routes_groups[true] || []
+      @expected_routes = routes_groups[false] || []
     end
 
     def pending_routes
