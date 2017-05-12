@@ -18,6 +18,6 @@ appraise "rails-40+rspec" do
   gem "rspec-rails"
 end
 
-# appraise "rails-51" do
-#   gem "rails", "~>5.1.0"
-# end
+appraise "rails-51" do
+  gem "rails", "~>5.1.0"
+end
