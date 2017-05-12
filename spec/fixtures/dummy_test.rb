@@ -5,7 +5,9 @@ require_relative 'dummy_app'
 #NB: at_exit order matters
 require 'minitest/autorun'
 
-RoutesCoverage.settings.format = :full_text
+if ARGV.first == 'full_text'
+  RoutesCoverage.settings.format = :full_text
+end
 
 class DummyRequestTest < ActionDispatch::IntegrationTest
   def test_coverage_enabled
