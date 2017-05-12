@@ -14,6 +14,7 @@ module RoutesCoverage
       end
 
       def status
+        return unless settings.minimum_coverage
         if result.coverage_pass?
           ""
         else
@@ -22,7 +23,7 @@ module RoutesCoverage
       end
 
       def format
-        "Routes coverage is #{result.coverage}% (#{hits_count})#{status}"
+        "\nRoutes coverage is #{result.coverage}% (#{hits_count})#{status}"
       end
     end
   end

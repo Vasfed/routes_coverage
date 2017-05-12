@@ -83,7 +83,7 @@ module RoutesCoverage
     end
 
     def coverage_pass?
-      coverage >= RoutesCoverage.settings.minimum_coverage
+      !RoutesCoverage.settings.minimum_coverage || (coverage >= RoutesCoverage.settings.minimum_coverage)
     end
   end
 end
