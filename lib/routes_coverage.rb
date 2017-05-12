@@ -25,12 +25,15 @@ module RoutesCoverage
 
     attr_accessor :format
 
+    attr_reader :groups
+
     def initialize
       @exclude_patterns = []
       @exclude_namespaces = []
       @minimum_coverage = 80
       @round_precision = 1
       @format = :summary_text
+      @groups = {}
     end
 
     def formatter_class
@@ -74,16 +77,34 @@ module RoutesCoverage
       all_routes.reject!{|r| r.app.is_a?(::Sprockets::Environment) }
     end
 
-    result = Result.new(
+    all_result = Result.new(
       all_routes,
       @@route_hit_count,
       settings
     )
 
-    formatter = settings.formatter_class.new(result, settings)
+    if settings.groups.any?
+      groups = Hash[settings.groups.map{|group_name, regex|
+        [group_name,
+          Result.new(
+            all_routes.select{|r| r.path.spec.to_s =~ regex},
+            Hash[@@route_hit_count.select{|r,_hits| r.path.spec.to_s =~ regex}],
+            settings
+          )
+        ]
+      }]
+
+      #TODO: group 'ungroupped'
+
+      #TODO: move to formatter
+      groups.each_pair{|name, result|
+        puts "\nGroup #{name}:"
+        puts settings.formatter_class.new(result, settings).format
+      }
+    end
 
     puts
-    puts formatter.format
+    puts settings.formatter_class.new(all_result, settings).format
   end
 
 
