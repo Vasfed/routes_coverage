@@ -41,6 +41,14 @@ To get more detailed information somewhere in your test helper add
 RoutesCoverage.settings.format = :full_text
 ```
 
+or into RSpec config:
+
+```ruby
+RSpec.configure do |config|
+  config.routes_coverage.format = :full_text
+end
+```
+
     Routes coverage is 11.1% (1 of 9 routes hit at 1.0 hits average)
     Coverage failed. Need at least 8
 
