@@ -1,3 +1,4 @@
+require 'active_support/core_ext/string' # needed for rails5 version of inspector
 require 'action_dispatch/routing/inspector'
 
 module RoutesCoverage
@@ -17,7 +18,7 @@ module RoutesCoverage
               verb:   route.verb,
               path:   route.path,
               reqs:   route.reqs,
-              regexp: route.json_regexp,
+              # regexp: route.json_regexp, # removed, this is not present in rails5
               original: route, # added
             }
           end
