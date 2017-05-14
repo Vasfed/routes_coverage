@@ -1,3 +1,6 @@
+require 'active_support/core_ext/string' # needed for rails5 version of inspector
+require 'action_dispatch/routing/inspector'
+
 module RoutesCoverage
   class Result
     def initialize all_routes, hit_routes, settings
@@ -70,5 +73,46 @@ module RoutesCoverage
     def coverage_pass?
       !@settings.minimum_coverage || (coverage.to_f >= @settings.minimum_coverage)
     end
+
+    def all_routes_with_hits
+      res = Inspector.new(all_routes).collect_all_routes
+      res.each{|val|
+        val[:hits] = @route_hit_counts[val[:original]] || 0
+      }
+      res
+    end
+
+    class Inspector < ActionDispatch::Routing::RoutesInspector
+      def collect_all_routes
+        res = collect_routes(@routes)
+        #TODO: test with engines
+        @engines.each do |engine_name, engine_routes|
+          res += engine_routes.map{|er|
+            er.merge({ engine_name: engine_name })
+          }
+        end
+        res
+      end
+
+      def collect_routes(routes)
+        routes.collect do |route|
+          ActionDispatch::Routing::RouteWrapper.new(route)
+        end.reject do |route|
+          route.internal?
+        end.collect do |route|
+          collect_engine_routes(route)
+
+          { name:   route.name,
+            verb:   route.verb,
+            path:   route.path,
+            reqs:   route.reqs,
+            # regexp: route.json_regexp, # removed, this is not present in rails5
+            # added:
+            original: route,
+          }
+        end
+      end
+    end
+
   end
 end

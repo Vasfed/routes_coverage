@@ -5,6 +5,7 @@ require "routes_coverage/middleware"
 require "routes_coverage/formatters/base"
 require "routes_coverage/formatters/summary_text"
 require "routes_coverage/formatters/full_text"
+require "routes_coverage/formatters/simplecov_html"
 
 module RoutesCoverage
   class Railtie < ::Rails::Railtie
@@ -42,6 +43,8 @@ module RoutesCoverage
         Formatters::FullText
       when :summary_text
         Formatters::SummaryText
+      when :simplecov_html
+        Formatters::SimpleCovHtml
       when Formatters::Base
         format
       else
@@ -108,6 +111,10 @@ module RoutesCoverage
 end
 
 if RoutesCoverage.enabled?
+  if defined? SimpleCov
+    #TODO: use SimpleCov.at_exit
+  end
+
   if defined? RSpec
     require "routes_coverage/adapters/rspec"
   else

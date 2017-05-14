@@ -55,4 +55,14 @@ describe "Minitest coverage" do
     end
   end
 
+  if defined? SimpleCov
+    it "works with simplecov" do
+      res,code = run_dummy_rspec 'dummy_test_simplecov.rb'
+      code.success?.must_equal true
+      res.must_match /Routes coverage is (\d+(.\d+)?)%/
+      res.must_match /routes\.html/
+      # File.file?(?../routes.html).must_equal true
+    end
+  end
+
 end

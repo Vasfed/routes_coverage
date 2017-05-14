@@ -1,0 +1,48 @@
+<div class="file_list_container" id="<%= title_id %>">
+  <h2>
+    <span class="group_name"><%= title %></span>
+    (<span class="covered_percent"><span class="<%= coverage_css_class(result.coverage.to_f) %>"><%= result.coverage %>%</span></span>
+     covered at
+     <span class="covered_strength">
+       <span class="<%#= strength_css_class(result.avg_hits) %>">
+         <%= result.avg_hits.round(2) %>
+       </span>
+    </span> hits/route)
+  </h2>
+  <a name="<%= title_id %>"></a>
+  <div>
+    <b><%= result.total_count %></b> routes in total.
+    <b><%= result.expected_routes_count %></b> relevant routes.
+    <span class="green"><b><%= result.hit_routes_count %></b> covered</span> and
+    <span class="red"><b><%= result.pending_routes.size %></b> missed </span>
+  </div>
+  <table class="route_list">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Verb</th>
+        <th>Path</th>
+        <th>Controller</th>
+        <th>Covered</th>
+        <th>Hits</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% result.all_routes_with_hits.each do |route| %>
+      <tr>
+        <td class="strong"><%= route[:name] %></td>
+        <td class="strong"><%= route[:verb] %></td>
+        <td class="strong"><%= route[:path] %></td>
+        <td class="strong">
+          <% if route[:engine_name] %>
+            engine <%= route[:engine_name] %>
+          <% end %>
+          <%= route[:reqs] %>
+        </td>
+        <td class="strong <%= hits_css_class route[:hits] %>"><%= route[:hits] > 0 ? 'Yes' : 'No' %></td>
+        <td class="<%= hits_css_class route[:hits] %> strong"><%= route[:hits] %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -18,6 +18,11 @@ appraise "rails-40+rspec" do
   gem "rspec-rails"
 end
 
+appraise "rails-40+simplecov" do
+  gem "rails", "~>4.0.0"
+  gem "simplecov"
+end
+
 appraise "rails-51" do
   gem "rails", "~>5.1.0"
 end
