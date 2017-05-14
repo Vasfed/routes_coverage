@@ -67,6 +67,14 @@ end
       PUT    /reqs/:id(.:format)      dummy#update
       DELETE /reqs/:id(.:format)      dummy#destroy
 
+### Usage with SimpleCov
+
+Use `RoutesCoverage.settings.format = :simplecov_html` along with simplecov to generate a html report like this:
+
+![Html output example](/assets/html_output_screenshot.png?raw=true "Html Output example")
+
+at the moment it shares styles with simplecov's one,
+code coverage report does not need to be generated each time as long as you have `/coverage` directory with all the resources.
 
 ### Configuration
 
