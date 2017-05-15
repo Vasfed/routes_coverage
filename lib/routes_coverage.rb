@@ -21,6 +21,8 @@ module RoutesCoverage
   class Settings
     attr_reader :exclude_patterns
     attr_reader :exclude_namespaces
+
+    attr_accessor :perform_report
     attr_accessor :minimum_coverage
     attr_accessor :round_precision
 
@@ -35,6 +37,7 @@ module RoutesCoverage
       @round_precision = 1
       @format = :html
       @groups = {}
+      @perform_report = true
     end
 
     def formatter_class
@@ -73,6 +76,7 @@ module RoutesCoverage
   end
 
   def self.perform_report
+    return unless settings.perform_report
 
     all_routes = ::Rails.application.routes.routes.routes.dup
 

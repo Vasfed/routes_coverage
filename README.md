@@ -34,6 +34,8 @@ By default html report with no groupping is generated. If you need more funtiona
 
 ```ruby
 RSpec.configure do |config|
+  config.routes_coverage.perform_report = ENV['ROUTES_COVERAGE'] # only generate report if env var is set
+
   config.routes_coverage.exclude_patterns << %r{PATCH /reqs}   # excludes all requests matching regex
   config.routes_coverage.exclude_namespaces << 'somenamespace' # excludes /somenamespace/*
 
