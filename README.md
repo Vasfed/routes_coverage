@@ -39,8 +39,8 @@ RSpec.configure do |config|
   config.routes_coverage.exclude_patterns << %r{PATCH /reqs}   # excludes all requests matching regex
   config.routes_coverage.exclude_namespaces << 'somenamespace' # excludes /somenamespace/*
 
-  config.groups["Some Route group title"] = %r{^/somespace/}
-  config.groups["Admin"] = %r{^/admin/}
+  config.routes_coverage.groups["Some Route group title"] = %r{^/somespace/}
+  config.routes_coverage.groups["Admin"] = %r{^/admin/}
 
   config.routes_coverage.format = :html # html is default, others are :full_text and :summary_text, or your custom formatter class
 
