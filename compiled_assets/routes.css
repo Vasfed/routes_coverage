@@ -297,6 +297,11 @@ td {
   td.strong {
     font-weight: bold; }
 
+tr.even td {
+  background: #efefef; }
+tr.odd td {
+  background: #fff; }
+
 #footer {
   color: #ddd;
   font-size: 12px;
