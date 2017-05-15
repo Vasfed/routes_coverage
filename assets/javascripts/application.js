@@ -1,5 +1,5 @@
-//= require_directory ./libraries/
-//= require_directory ./plugins/
+//= require_directory ./vendor/libraries/
+//= require_directory ./vendor/plugins/
 //= require_self
 
 $(document).ready(function() {
