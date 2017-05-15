@@ -17,7 +17,7 @@
           <li>
             <a href="#<%= grp[:id] %>" class="<%= grp[:id] %>">
               <%= grp[:name] %>
-              (<span class="<%= coverage_css_class(grp[:result].coverage.to_f) %>"><%= result.coverage %>%</span>)
+              (<span class="<%= coverage_css_class(grp[:result].coverage.to_f) %>"><%= grp[:result].coverage %>%</span>)
             </a>
           </li>
         <% end %>
