@@ -19,3 +19,17 @@ task :default => :spec
 
 $:.push File.expand_path("../lib", __FILE__)
 require 'routes_coverage/version'
+
+namespace :assets do
+  desc "Compiles all assets"
+  task :compile do
+    puts "Compiling assets"
+    require "sprockets"
+    assets = Sprockets::Environment.new
+    assets.append_path "assets/javascripts"
+    assets.append_path "assets/stylesheets"
+    compiled_path = "compiled_assets"
+    assets["application.js"].write_to("#{compiled_path}/routes.js")
+    assets["application.css"].write_to("#{compiled_path}/routes.css")
+  end
+end

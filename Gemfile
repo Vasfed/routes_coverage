@@ -6,5 +6,10 @@ source 'https://rubygems.org'
 
 # rails should be included before us
 gem 'rails', '4.0.13'
+gem 'simplecov', require: false
+
+# for assets:
+gem 'sprockets'
+gem 'sass'
 
 gemspec

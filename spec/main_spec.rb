@@ -47,6 +47,12 @@ describe "Minitest coverage" do
     res.wont_match %r{/index/}
   end
 
+  it "generates html report" do
+    res, code = run_dummy_test 'dummy_html.rb'
+    code.success?.must_equal true
+    File.file?('coverage/routes.html').must_equal true
+  end
+
   if defined? RSpec
     it "works with rspec" do
       res,code = run_dummy_rspec 'dummy_rspec.rb'

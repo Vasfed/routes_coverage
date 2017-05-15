@@ -1,0 +1,148 @@
+//= require ./reset
+//= require_directory ./plugins/
+//= require_self
+
+
+// style based on SimpleCov-html by Christoph Olszowka
+
+#loading
+  position: fixed
+  color: white
+  left: 40%
+  top: 50%
+
+a
+  color: #333
+  text-decoration: none
+  &:hover
+    color: #000
+    text-decoration: underline
+
+body
+  font-family: "Lucida Grande", Helvetica, "Helvetica Neue", Arial, sans-serif
+  padding: 12px
+  background-color: #333
+
+h1, h2, h3, h4
+  color: #1C2324
+  margin: 0
+  padding: 0
+  margin-bottom: 12px
+
+table
+  width: 100%
+
+#content
+  clear: left
+  background-color: white
+  border: 2px solid #ddd
+  border-top: 8px solid #ddd
+  padding: 18px
+  -webkit-border-bottom-left-radius: 5px
+  -webkit-border-bottom-right-radius: 5px
+  -webkit-border-top-right-radius: 5px
+  -moz-border-radius-bottomleft: 5px
+  -moz-border-radius-bottomright: 5px
+  -moz-border-radius-topright: 5px
+  border-bottom-left-radius: 5px
+  border-bottom-right-radius: 5px
+  border-top-right-radius: 5px
+
+.dataTables_filter, .dataTables_info
+  padding: 2px 6px
+
+abbr.timeago
+  text-decoration: none
+  border: none
+  font-weight: bold
+
+.timestamp
+  float: right
+  color: #ddd
+
+.group_tabs
+  list-style: none
+  float: left
+  margin: 0
+  padding: 0
+  li
+    display: inline
+    float: left
+    a
+      font-family: Helvetica, Arial, sans-serif
+      display: block
+      float: left
+      text-decoration: none
+      padding: 4px 8px
+      background-color: #aaa
+      background: -webkit-gradient(linear, 0 0, 0 bottom, from(#dddddd), to(#aaaaaa))
+      background: -moz-linear-gradient(#dddddd, #aaaaaa)
+      background: linear-gradient(#dddddd, #aaaaaa)
+      text-shadow: #e5e5e5 1px 1px 0px
+      border-bottom: none
+      color: #333
+      font-weight: bold
+      margin-right: 8px
+      border-top: 1px solid #efefef
+      -webkit-border-top-left-radius: 2px
+      -webkit-border-top-right-radius: 2px
+      -moz-border-radius-topleft: 2px
+      -moz-border-radius-topright: 2px
+      border-top-left-radius: 2px
+      border-top-right-radius: 2px
+      &:hover
+        background-color: #ccc
+        background: -webkit-gradient(linear, 0 0, 0 bottom, from(#eeeeee), to(#aaaaaa))
+        background: -moz-linear-gradient(#eeeeee, #aaaaaa)
+        background: linear-gradient(#eeeeee, #aaaaaa)
+      &:active
+        padding-top: 5px
+        padding-bottom: 3px
+    &.active a
+      color: black
+      text-shadow: #fff 1px 1px 0px
+      background-color: #ddd
+      background: -webkit-gradient(linear, 0 0, 0 bottom, from(white), to(#dddddd))
+      background: -moz-linear-gradient(white, #dddddd)
+      background: linear-gradient(white, #dddddd)
+
+.route_list
+  margin-bottom: 18px
+
+tr, td
+  margin: 0
+  padding: 0
+
+th
+  white-space: nowrap
+  &.ui-state-default
+    cursor: pointer
+  span.ui-icon
+    float: left
+
+td
+  padding: 4px 8px
+  &.strong
+    font-weight: bold
+
+#footer
+  color: #ddd
+  font-size: 12px
+  font-weight: bold
+  margin-top: 12px
+  text-align: right
+  a
+    color: #eee
+    text-decoration: underline
+    &:hover
+      color: #fff
+      text-decoration: none
+
+.green
+  color: #090
+
+.red
+  color: #900
+
+.yellow
+  color: #da0

@@ -9,6 +9,7 @@
        </span>
     </span> hits/route)
   </h2>
+
   <a name="<%= title_id %>"></a>
   <div>
     <b><%= result.total_count %></b> routes in total.
@@ -16,9 +17,11 @@
     <span class="green"><b><%= result.hit_routes_count %></b> covered</span> and
     <span class="red"><b><%= result.pending_routes.size %></b> missed </span>
   </div>
+
   <table class="route_list">
     <thead>
       <tr>
+        <%# NB: columns are also referenced from datatables config in js %>
         <th>Name</th>
         <th>Verb</th>
         <th>Path</th>

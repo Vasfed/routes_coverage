@@ -5,7 +5,7 @@ require "routes_coverage/middleware"
 require "routes_coverage/formatters/base"
 require "routes_coverage/formatters/summary_text"
 require "routes_coverage/formatters/full_text"
-require "routes_coverage/formatters/simplecov_html"
+require "routes_coverage/formatters/html"
 
 module RoutesCoverage
   class Railtie < ::Rails::Railtie
@@ -43,8 +43,8 @@ module RoutesCoverage
         Formatters::FullText
       when :summary_text
         Formatters::SummaryText
-      when :simplecov_html
-        Formatters::SimpleCovHtml
+      when :html, :simplecov_html
+        Formatters::Html
       when Formatters::Base
         format
       else
@@ -97,7 +97,21 @@ module RoutesCoverage
       ]
     }]
 
-    #TODO: group 'ungroupped'
+    if groups.size > 1
+      ungroupped_routes = all_routes.reject{|r|
+        groups.values.any?{|group_routes|
+          group_routes.all_routes.include? r
+        }
+      }
+
+      if ungroupped_routes.any?
+        groups["Ungroupped"] = Result.new(
+          ungroupped_routes,
+          Hash[@@route_hit_count.select{|r,_hits| ungroupped_routes.include? r}],
+          settings
+        )
+      end
+    end
 
     puts
     puts settings.formatter_class.new(all_result, groups, settings).format
