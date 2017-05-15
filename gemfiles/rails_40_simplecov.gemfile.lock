@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    routes_coverage (0.0.3)
+    routes_coverage (0.1.0)
 
 GEM
   remote: https://rubygems.org/
@@ -65,6 +65,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.5.0)
+    sass (3.4.22)
     simplecov (0.14.1)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -91,7 +92,9 @@ DEPENDENCIES
   rails (~> 4.0.0)
   rake (~> 10.0)
   routes_coverage!
+  sass
   simplecov
+  sprockets
 
 BUNDLED WITH
    1.14.6
