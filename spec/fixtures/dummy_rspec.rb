@@ -2,6 +2,8 @@ ENV['RAILS_ENV'] = 'test'
 require_relative 'dummy_app'
 require 'rspec/rails'
 
+RoutesCoverage.settings.format = :summary_text
+
 RSpec.describe "dummy", type: :request do
 
   it "ensure coverage is enabled" do

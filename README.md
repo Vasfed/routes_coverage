@@ -4,7 +4,8 @@
 
 Sometimes you need to know which routes are covered by your rails test suite.
 
-(more detailed readme coming soon)
+![Html output example](/assets/html_output_screenshot.png?raw=true "Html Output example")
+
 
 ## Installation
 
@@ -24,73 +25,30 @@ Or install it yourself as:
 
 ## Usage
 
-Install the gem and run your tests. By default you'll see something like:
+Install the gem and run your tests, then open generated report file `coverage/routes.html`.
 
-    # Running tests:
-
-    ....
-
-    Finished tests in 0.037646s, 106.2530 tests/s, 106.2530 assertions/s.
-
-    4 tests, 4 assertions, 0 failures, 0 errors, 0 skips
-    Routes coverage is 11.1% (1 of 9 routes hit at 1.0 hits average)
-
-To get more detailed information somewhere in your test helper add
-
-```ruby
-RoutesCoverage.settings.format = :full_text
-```
-
-or into RSpec config:
-
-```ruby
-RSpec.configure do |config|
-  config.routes_coverage.format = :full_text
-end
-```
-
-    Routes coverage is 11.1% (1 of 9 routes hit at 1.0 hits average)
-    Coverage failed. Need at least 8
-
-    Covered routes:
-     Verb URI Pattern             Controller#Action Hits
-     POST /reqs/current(.:format) dummy#current     1
-
-    Pending routes:
-      Verb   URI Pattern              Controller#Action
-      GET    /reqs(.:format)          dummy#index
-      POST   /reqs(.:format)          dummy#create
-      GET    /reqs/new(.:format)      dummy#new
-      GET    /reqs/:id/edit(.:format) dummy#edit
-      GET    /reqs/:id(.:format)      dummy#show
-      PATCH  /reqs/:id(.:format)      dummy#update
-      PUT    /reqs/:id(.:format)      dummy#update
-      DELETE /reqs/:id(.:format)      dummy#destroy
-
-### Usage with SimpleCov
-
-Use `RoutesCoverage.settings.format = :simplecov_html` along with simplecov to generate a html report like this:
-
-![Html output example](/assets/html_output_screenshot.png?raw=true "Html Output example")
-
-at the moment it shares styles with simplecov's one,
-code coverage report does not need to be generated each time as long as you have `/coverage` directory with all the resources.
 
 ### Configuration
 
-Set options in `RoutesCoverage.settings` or rspec's `config.routes_coverage`:
+By default html report with no groupping is generated. If you need more funtionality - options in `RoutesCoverage.settings` or rspec's `config.routes_coverage`:
 
 ```ruby
 RSpec.configure do |config|
-  config.routes_coverage.format = :full_text
   config.routes_coverage.exclude_patterns << %r{PATCH /reqs}   # excludes all requests matching regex
   config.routes_coverage.exclude_namespaces << 'somenamespace' # excludes /somenamespace/*
+
+  config.groups["Some Route group title"] = %r{^/somespace/}
+  config.groups["Admin"] = %r{^/admin/}
+
+  config.routes_coverage.format = :html # html is default, others are :full_text and :summary_text, or your custom formatter class
+
   config.routes_coverage.minimum_coverage = 80 # %, your coverage goal
   config.routes_coverage.round_precision = 0   # just round to whole percents
 end
 ```
+Excluded routes do not show in pending, but are shown if they're hit.
 
-or
+If rspec is not your choice - use
 
 ```ruby
 RoutesCoverage.configure do |config|
@@ -99,8 +57,12 @@ RoutesCoverage.configure do |config|
 end
 ```
 
+or
 
-Excluded routes do not show in pending, but are shown if they're hit.
+```ruby
+RoutesCoverage.settings.format = :full_text
+```
+
 
 
 ## Development

@@ -33,7 +33,7 @@ module RoutesCoverage
       @exclude_namespaces = []
       @minimum_coverage = 1
       @round_precision = 1
-      @format = :summary_text
+      @format = :html
       @groups = {}
     end
 
