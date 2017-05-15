@@ -9,7 +9,6 @@ class DummyApplication < Rails::Application
   config.secret_key_base = 'df5394d6c6fa8fdc95cf883df725b8b6'
   config.active_support.test_order = :sorted #if config.active_support.respond_to?(:test_order)
 
-  # config.consider_all_requests_local     = true
   # config.action_dispatch.show_exceptions = false #raise instead
 end
 
@@ -36,4 +35,6 @@ DummyApplication.routes.draw do
   namespace :otherspace do
     resources :bar, only:[:index]
   end
+
+  get 'r*catch_almost_all_route', to: 'dummy#not_found_error'
 end

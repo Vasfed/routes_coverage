@@ -13,7 +13,7 @@ class DummyRequestTest < ActionDispatch::IntegrationTest
   end
 
   def test_index
-    get '/reqs/'
+    get '/reqs'
     assert_response :success
   end
 
@@ -23,7 +23,7 @@ class DummyRequestTest < ActionDispatch::IntegrationTest
   end
 
   def test_404
-    get '/asfjdshfjsdh/'
+    get '/asfjdshfjsdh'
     assert_response :not_found
   end
 end

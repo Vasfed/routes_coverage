@@ -17,8 +17,6 @@ describe "Minitest coverage" do
 
   it "works" do
     res, code = run_dummy_test 'dummy_test.rb'
-
-    # puts "#{'-'*20}\n#{res}#{'-'*20}\n"
     code.success?.must_equal true
     res.must_match /\d+ assertions, 0 failures, 0 errors, 0 skips/
     res.must_match /Routes coverage is (\d+(.\d+)?)%/
@@ -29,6 +27,13 @@ describe "Minitest coverage" do
     code.success?.must_equal true
     res.must_match %r{POST\s+/reqs/current\(\.:format\)\s+dummy#current\s+1}
     res.must_match /dummy#update/
+  end
+
+  it "does not count catch-all routes" do
+    res, code = run_dummy_test 'dummy_test_full.rb'
+    code.success?.must_equal true
+    res.must_match %r{dummy#not_found_error}
+    res.wont_match %r{dummy#not_found_error\s+\d}
   end
 
   it "has namespace filters" do
