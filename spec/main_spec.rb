@@ -5,14 +5,22 @@ require 'minitest/autorun'
 
 describe "Minitest coverage" do
 
-  def run_dummy_test testfile='dummy_test.rb'
-    output = `bundle exec ruby #{File.dirname(__FILE__)}/fixtures/#{testfile}`
+  def run_cmd cmd
+    output = `#{cmd}`
+
+    #hack minitest into displaying more readable error:
+    def output.inspect
+      "\n#{to_s.gsub(/^/, "\t> ")}"
+    end
     return [output, $?]
   end
 
+  def run_dummy_test testfile='dummy_test.rb'
+    run_cmd "bundle exec ruby #{File.dirname(__FILE__)}/fixtures/#{testfile}"
+  end
+
   def run_dummy_rspec testfile='dummy_rspec.rb'
-    output = `bundle exec rspec #{File.dirname(__FILE__)}/fixtures/#{testfile}`
-    return [output, $?]
+    run_cmd "bundle exec rspec #{File.dirname(__FILE__)}/fixtures/#{testfile}"
   end
 
   it "works" do
@@ -64,6 +72,13 @@ describe "Minitest coverage" do
     res.must_match %r|PUT\s+/standalone_put|
     res.must_match %r|PUT\s+/used_put/:|
     res.wont_match %r|PUT\s+/reqs/:|
+  end
+
+  it "constraints_differ" do
+    res, code = run_dummy_test 'constraints_test.rb'
+    code.success?.must_equal true
+    res.must_match %r|GET\s+/rec\(\.:format\)\s+dummy#index\s+1|
+    res.must_match %r|GET\s+/rec\(\.:format\)\s+dummy#update\s+1|
   end
 
   if defined? RSpec
