@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    routes_coverage (0.3.0)
+    routes_coverage (0.3.1)
 
 GEM
   remote: https://rubygems.org/
