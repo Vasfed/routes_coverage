@@ -12,7 +12,6 @@ $(document).ready(function() {
       null, //verb
       null, //path
       null, //action
-      null, //covered yes/no
       null, //hits count
     ]
   });

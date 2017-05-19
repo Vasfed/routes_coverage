@@ -26,24 +26,22 @@
         <th>Verb</th>
         <th>Path</th>
         <th>Controller</th>
-        <th>Covered</th>
         <th>Hits</th>
       </tr>
     </thead>
     <tbody>
       <% result.all_routes_with_hits.each do |route| %>
-      <tr>
-        <td class="strong"><%= route[:name] %></td>
-        <td class="strong"><%= route[:verb] %></td>
-        <td class="strong"><%= route[:path] %></td>
-        <td class="strong">
+      <tr class="<%= hits_css_class route[:hits] %>">
+        <td class="name"><%= route[:name] %></td>
+        <td class="verb"><%= route[:verb] %></td>
+        <td class="path"><%= route[:path] %></td>
+        <td class="cont">
           <% if route[:engine_name] %>
             engine <%= route[:engine_name] %>
           <% end %>
           <%= route[:reqs] %>
         </td>
-        <td class="strong <%= hits_css_class route[:hits] %>"><%= route[:hits] > 0 ? 'Yes' : 'No' %></td>
-        <td class="<%= hits_css_class route[:hits] %> strong"><%= route[:hits] %></td>
+        <td class="hits"><%= route[:hits] %></td>
       </tr>
       <% end %>
     </tbody>

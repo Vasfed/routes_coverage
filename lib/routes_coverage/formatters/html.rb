@@ -84,7 +84,7 @@ module RoutesCoverage
       end
 
       def hits_css_class hits
-        hits > 0 ? 'green' : 'red'
+        hits > 0 ? 'cov' : 'uncov'
       end
 
       def timeago(time)

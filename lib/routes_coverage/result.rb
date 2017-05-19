@@ -62,7 +62,7 @@ module RoutesCoverage
     end
 
     def coverage
-      return 'n/a' unless expected_routes.any?
+      return 0 unless expected_routes.any?
       (hit_routes_count * 100.0 / expected_routes_count).round(@settings.round_precision)
     end
 

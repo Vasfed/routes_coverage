@@ -109,6 +109,17 @@ abbr.timeago
 .route_list
   margin-bottom: 18px
 
+  tr
+    td
+      font-weight: bold
+    &.cov
+      td.verb,td.path,td.cont,td.hits
+        color: #090 !important
+    &.uncov
+      td.verb,td.path,td.cont,td.hits
+        color: #900 !important
+
+
 tr, td
   margin: 0
   padding: 0
@@ -122,8 +133,6 @@ th
 
 td
   padding: 4px 8px
-  &.strong
-    font-weight: bold
 
 tr
   &.even td

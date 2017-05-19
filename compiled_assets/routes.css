@@ -280,6 +280,12 @@ abbr.timeago {
 
 .route_list {
   margin-bottom: 18px; }
+  .route_list tr td {
+    font-weight: bold; }
+  .route_list tr.cov td.verb, .route_list tr.cov td.path, .route_list tr.cov td.cont, .route_list tr.cov td.hits {
+    color: #090 !important; }
+  .route_list tr.uncov td.verb, .route_list tr.uncov td.path, .route_list tr.uncov td.cont, .route_list tr.uncov td.hits {
+    color: #900 !important; }
 
 tr, td {
   margin: 0;
@@ -294,8 +300,6 @@ th {
 
 td {
   padding: 4px 8px; }
-  td.strong {
-    font-weight: bold; }
 
 tr.even td {
   background: #efefef; }
