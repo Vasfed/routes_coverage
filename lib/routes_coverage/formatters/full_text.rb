@@ -12,7 +12,7 @@ module RoutesCoverage
           super()
         end
 
-        def no_routes
+        def no_routes _routes_from_rails5=nil
           @buffer << "\tNone"
         end
 
