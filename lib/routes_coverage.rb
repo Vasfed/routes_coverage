@@ -21,6 +21,7 @@ module RoutesCoverage
   class Settings
     attr_reader :exclude_patterns
     attr_reader :exclude_namespaces
+    attr_accessor :exclude_put_fallbacks
 
     attr_accessor :perform_report
     attr_accessor :minimum_coverage
@@ -33,6 +34,7 @@ module RoutesCoverage
     def initialize
       @exclude_patterns = []
       @exclude_namespaces = []
+      @exclude_put_fallbacks = false
       @minimum_coverage = 1
       @round_precision = 1
       @format = :html
@@ -82,6 +84,20 @@ module RoutesCoverage
 
     if defined?(::Sprockets) && defined?(::Sprockets::Environment)
       all_routes.reject!{|r| r.app.is_a?(::Sprockets::Environment) }
+    end
+
+    if settings.exclude_put_fallbacks
+      all_routes.reject!{|put_route|
+        put_route.verb == /^PUT$/ &&
+        put_route.name.nil? &&
+        @@route_hit_count[put_route] == 0 &&
+        all_routes.any?{|patch_route|
+          patch_route.verb == /^PATCH$/ &&
+          patch_route.defaults == put_route.defaults &&
+          patch_route.ip == put_route.ip &&
+          patch_route.path.spec.to_s == put_route.path.spec.to_s
+        }
+      }
     end
 
     all_result = Result.new(

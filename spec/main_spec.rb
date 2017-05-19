@@ -58,6 +58,14 @@ describe "Minitest coverage" do
     File.file?('coverage/routes.html').must_equal true
   end
 
+  it "filters fallback put-routes" do
+    res, code = run_dummy_test 'put_test.rb'
+    code.success?.must_equal true
+    res.must_match %r|PUT\s+/standalone_put|
+    res.must_match %r|PUT\s+/used_put/:|
+    res.wont_match %r|PUT\s+/reqs/:|
+  end
+
   if defined? RSpec
     it "works with rspec" do
       res,code = run_dummy_rspec 'dummy_rspec.rb'

@@ -1,5 +1,5 @@
 ENV['RAILS_ENV'] = 'test'
-require_relative 'dummy_app'
+require_relative 'dummy_routes'
 require 'rspec/rails'
 
 RoutesCoverage.settings.format = :summary_text

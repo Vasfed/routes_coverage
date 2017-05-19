@@ -1,6 +1,6 @@
 
 ENV['RAILS_ENV'] = 'test'
-require_relative 'dummy_app'
+require_relative 'dummy_routes'
 
 #NB: at_exit order matters
 require 'minitest/autorun'
