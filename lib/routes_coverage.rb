@@ -88,11 +88,17 @@ module RoutesCoverage
 
     if settings.exclude_put_fallbacks
       all_routes.reject!{|put_route|
-        put_route.verb == /^PUT$/ &&
+        (
+          put_route.verb == /^PUT$/ ||
+          put_route.verb == "PUT" # rails 5
+        ) &&
         put_route.name.nil? &&
         @@route_hit_count[put_route] == 0 &&
         all_routes.any?{|patch_route|
-          patch_route.verb == /^PATCH$/ &&
+          (
+            patch_route.verb == /^PATCH$/ ||
+            patch_route.verb == "PATCH" # rails5
+          ) &&
           patch_route.defaults == put_route.defaults &&
           patch_route.ip == put_route.ip &&
           patch_route.path.spec.to_s == put_route.path.spec.to_s
