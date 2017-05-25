@@ -5,7 +5,8 @@ module RoutesCoverage
     end
 
     def call env
-      req = ::Rails.application.routes.request_class.new env
+      # router changes env/request during recognition so need a copy:
+      req = ::Rails.application.routes.request_class.new env.dup
       ::Rails.application.routes.router.recognize(req) do |route|
         dispatcher = route.app
         if dispatcher.respond_to?(:dispatcher?)
