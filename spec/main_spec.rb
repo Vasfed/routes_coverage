@@ -81,6 +81,11 @@ describe "Minitest coverage" do
     res.must_match %r|GET\s+/rec\(\.:format\)\s+dummy#update\s+1|
   end
 
+  it "working mounted engines, including Sprockets" do
+    res, code = run_dummy_test 'sprockets_test.rb'
+    code.success?.must_equal true
+  end
+
   if defined? RSpec
     it "works with rspec" do
       res,code = run_dummy_rspec 'dummy_rspec.rb'
