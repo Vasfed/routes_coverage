@@ -7,4 +7,4 @@ gem "simplecov"
 gem "sprockets"
 gem "sass"
 
-gemspec :path => "../"
+gemspec path: "../"
