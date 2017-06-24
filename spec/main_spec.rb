@@ -74,6 +74,14 @@ describe "Minitest coverage" do
     res.wont_match %r|PUT\s+/reqs/:|
   end
 
+  it "supports redirect routes" do
+    res, code = run_dummy_test 'redirect_test.rb'
+    code.success?.must_equal true
+    res.must_match %r|GET\s+/|
+    res.must_match %r|Routes coverage is 50|
+    res.must_match %r|1 of 2 routes hit|
+  end
+
   it "constraints_differ" do
     res, code = run_dummy_test 'constraints_test.rb'
     code.success?.must_equal true

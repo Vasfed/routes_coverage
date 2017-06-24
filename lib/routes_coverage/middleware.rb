@@ -10,7 +10,9 @@ module RoutesCoverage
       ::Rails.application.routes.router.recognize(req) do |route|
         dispatcher = route.app
         if dispatcher.respond_to?(:dispatcher?)
-          dispatcher = nil unless dispatcher.matches?(req) && dispatcher.dispatcher?
+          unless dispatcher.matches?(req) # && dispatcher.dispatcher?
+            dispatcher = nil
+          end
         else # rails < 4.2
           dispatcher = route.app
           while dispatcher.is_a?(ActionDispatch::Routing::Mapper::Constraints) do
