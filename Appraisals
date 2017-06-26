@@ -26,3 +26,8 @@ end
 appraise "rails-51" do
   gem "rails", "~>5.1.0"
 end
+
+appraise 'rails-3' do
+  gem 'rails', '~>3.2.22'
+  gem 'test-unit'
+end

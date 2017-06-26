@@ -67,6 +67,7 @@ describe "Minitest coverage" do
   end
 
   it "filters fallback put-routes" do
+    skip if Rails.version < '4'
     res, code = run_dummy_test 'put_test.rb'
     code.success?.must_equal true
     res.must_match %r|PUT\s+/standalone_put|
@@ -90,6 +91,7 @@ describe "Minitest coverage" do
   end
 
   it "working mounted engines, including Sprockets" do
+    skip if Rails.version < '4'
     res, code = run_dummy_test 'sprockets_test.rb'
     code.success?.must_equal true
   end
