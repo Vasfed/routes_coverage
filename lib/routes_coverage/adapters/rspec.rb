@@ -1,3 +1,5 @@
+require 'rspec/core'
+
 RSpec.configure do |config|
   config.add_setting :routes_coverage
   config.routes_coverage = RoutesCoverage.settings
