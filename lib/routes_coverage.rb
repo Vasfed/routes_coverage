@@ -151,14 +151,15 @@ module RoutesCoverage
 end
 
 if RoutesCoverage.enabled?
-  if defined? SimpleCov
-    #TODO: use SimpleCov.at_exit
-  end
-
-  if defined? RSpec
-    require "routes_coverage/adapters/rspec"
+  if defined?(SimpleCov) && SimpleCov.running
+    require 'routes_coverage/adapters/simplecov'
+    RoutesCoverage::Adapters::SimpleCov.use
   else
-    require "routes_coverage/adapters/atexit"
-    RoutesCoverage::Adapters::AtExit.use
+    if defined? RSpec
+      require "routes_coverage/adapters/rspec"
+    else
+      require "routes_coverage/adapters/atexit"
+      RoutesCoverage::Adapters::AtExit.use
+    end
   end
 end
