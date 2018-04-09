@@ -4,17 +4,21 @@ module RoutesCoverage
       @app = app
     end
 
-    def call env
+    def call original_env
       # router changes env/request during recognition so need a copy:
-      req = ::Rails.application.routes.request_class.new env.dup
-      ::Rails.application.routes.router.recognize(req) do |route|
+      env = original_env.dup
+      req = ::Rails.application.routes.request_class.new env
+      ::Rails.application.routes.router.recognize(req) do |route, parameters5, parameters4|
+        parameters = parameters5 || parameters4
         dispatcher = route.app
         if dispatcher.respond_to?(:dispatcher?)
+          req.path_parameters = parameters
           unless dispatcher.matches?(req) # && dispatcher.dispatcher?
             dispatcher = nil
           end
         else # rails < 4.2
           dispatcher = route.app
+          req.env['action_dispatch.request.path_parameters'] = (env['action_dispatch.request.path_parameters'] || {}).merge(parameters)
           while dispatcher.is_a?(ActionDispatch::Routing::Mapper::Constraints) do
             if dispatcher.matches?(env)
               dispatcher = dispatcher.app
@@ -30,7 +34,7 @@ module RoutesCoverage
         break
       end
       #TODO: detect 404s? and maybe other route errors?
-      @app.call(env)
+      @app.call(original_env)
     end
   end
 end

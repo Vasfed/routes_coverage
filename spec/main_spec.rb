@@ -88,6 +88,7 @@ describe "Minitest coverage" do
     code.success?.must_equal true
     res.must_match %r|GET\s+/rec\(\.:format\)\s+dummy#index\s+1|
     res.must_match %r|GET\s+/rec\(\.:format\)\s+dummy#update\s+1|
+    res.must_match %r|GET\s+/rec/:TYPE\(\.:format\)\s+dummy#current\s+1|
   end
 
   it "working mounted engines, including Sprockets" do
