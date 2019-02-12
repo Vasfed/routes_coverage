@@ -5,11 +5,13 @@ source 'https://rubygems.org'
 # this file is only for quick tests
 
 # rails should be included before us
-gem 'rails', '5.2.0.rc1'
+gem 'rails', '5.2.2'
 gem 'simplecov', require: false
 
 # for assets:
 gem 'sprockets'
 gem 'sass'
+
+gem 'byebug'
 
 gemspec

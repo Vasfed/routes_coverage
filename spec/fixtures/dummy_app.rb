@@ -5,8 +5,11 @@ require "routes_coverage"
 
 class DummyApplication < Rails::Application
   config.eager_load = false
-  config.secret_token = 'df5394d6c6fa8fdc95cf883df725b8b8'
-  config.secret_key_base = 'df5394d6c6fa8fdc95cf883df725b8b6'
+  if config.respond_to? :secret_key_base
+    config.secret_key_base = 'df5394d6c6fa8fdc95cf883df725b8b6'
+  else
+    config.secret_token = 'df5394d6c6fa8fdc95cf883df725b8b8'
+  end
   config.active_support.test_order = :sorted #if config.active_support.respond_to?(:test_order)
 
   config.active_support.deprecation = :stderr

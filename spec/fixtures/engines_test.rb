@@ -5,12 +5,12 @@ require 'minitest/autorun'
 
 
 class NestedEngine < Rails::Engine
-  def self.routes
-    @routes ||= ActionDispatch::Routing::RouteSet.new
-  end
+  # def self.routes
+  #   @routes ||= ActionDispatch::Routing::RouteSet.new
+  # end
 
   routes.draw do
-    root to: "dummy#index"
+    root to: "engine#index"
   end
 
   class Controller < ActionController::Base
@@ -18,9 +18,15 @@ class NestedEngine < Rails::Engine
   end
 end
 
+class EngineController < ActionController::Base
+  def index
+    render status: :ok, inline: 'lala'
+  end
+end
+
 DummyApplication.routes.draw do
   root to: 'dummy#index'
-  mount NestedEngine => "/engine" 
+  mount NestedEngine => "/engine/" 
 end
 
 DummyApplication.config.action_dispatch.show_exceptions = false
@@ -30,7 +36,7 @@ RoutesCoverage.configure do|config|
 end
 
 
-class DummyRequestTest < ActionDispatch::IntegrationTest
+class EnginesTest < ActionDispatch::IntegrationTest
   def test_coverage_enabled
     assert_equal RoutesCoverage.enabled?, true
   end
