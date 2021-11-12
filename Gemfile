@@ -5,7 +5,7 @@ source 'https://rubygems.org'
 # this file is only for quick tests
 
 # rails should be included before us
-gem 'rails', '5.2.0.rc1'
+gem 'rails', '~>5.2.6'
 gem 'simplecov', require: false
 
 # for assets:

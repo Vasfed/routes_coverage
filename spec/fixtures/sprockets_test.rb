@@ -6,8 +6,9 @@ require "routes_coverage"
 require 'minitest/autorun'
 
 class DummyApplication < Rails::Application
+  config.root = File.expand_path('.', __dir__)
   config.eager_load = false
-  config.secret_token = 'df5394d6c6fa8fdc95cf883df725b8b8'
+  config.secret_token = 'df5394d6c6fa8fdc95cf883df725b8b8' unless Rails.version >= '5'
   config.secret_key_base = 'df5394d6c6fa8fdc95cf883df725b8b6'
   config.active_support.test_order = :sorted #if config.active_support.respond_to?(:test_order)
 

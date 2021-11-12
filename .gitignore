@@ -10,3 +10,5 @@
 /log/
 /coverage/
 /gemfiles/*.lock
+/spec/fixtures/log
+/spec/fixtures/tmp
