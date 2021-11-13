@@ -15,7 +15,9 @@ Gem::Specification.new do |spec|
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test|spec|features|assets)/})
+    f.match(%r{^(test|spec|features|assets|bin|gemfiles)/}) ||
+      f.start_with?('.') ||
+      %w[Appraisals Gemfile Rakefile].include?(f)
   end
   spec.require_paths = ["lib"]
 
