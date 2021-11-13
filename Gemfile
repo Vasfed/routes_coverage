@@ -6,18 +6,20 @@ source 'https://rubygems.org'
 # NB: all other non-listed gems should go into Appraisals,
 # this file is only for quick tests
 
-# rails should be included before us
-gem 'rails', '~>5.2.6'
-gem 'simplecov', require: false
+unless defined?(Appraisal)
+  # rails should be included before us
+  gem 'rails', '~>5.2.6'
+  gem 'simplecov', require: false
 
-gem 'm' # minitest runner with support for runing one test by source location
-gem 'rubocop'
-gem 'rubocop-minitest'
-gem 'rubocop-rails'
-gem 'rubocop-rake'
+  gem 'm', require: false # minitest runner with support for runing one test by source location
+  gem 'rubocop', require: false
+  gem 'rubocop-minitest', require: false
+  gem 'rubocop-rails', require: false
+  gem 'rubocop-rake', require: false
 
-# for assets:
-gem 'sprockets'
-gem 'sass'
+  # for assets:
+  gem 'sprockets'
+  gem 'sass'
+end
 
 gemspec

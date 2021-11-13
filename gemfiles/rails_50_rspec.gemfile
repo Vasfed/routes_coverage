@@ -3,9 +3,6 @@
 source "https://rubygems.org"
 
 gem "rails", "~>5.0.0"
-gem "simplecov", require: false
-gem "sprockets"
-gem "sass"
 gem "rspec-rails"
 
 gemspec path: "../"
