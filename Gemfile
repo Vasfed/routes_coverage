@@ -8,6 +8,8 @@ source 'https://rubygems.org'
 gem 'rails', '~>5.2.6'
 gem 'simplecov', require: false
 
+gem 'm' # minitest runner with support for runing one test by source location
+
 # for assets:
 gem 'sprockets'
 gem 'sass'
