@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "erb"
 require "cgi"
 require "fileutils"
@@ -36,12 +38,12 @@ module RoutesCoverage
         return SimpleCov.coverage_dir if defined? SimpleCov
         return @coverage_dir if defined?(@coverage_dir) && dir.nil?
 
-        @coverage_path = nil # invalidate cache
+        @output_path = nil # invalidate cache
         @coverage_dir = (dir || "coverage")
       end
 
       def output_path
-        @coverage_path ||= File.expand_path(coverage_dir, root).tap do |path|
+        @output_path ||= File.expand_path(coverage_dir, root).tap do |path|
           FileUtils.mkdir_p path
         end
       end
@@ -53,7 +55,7 @@ module RoutesCoverage
       end
 
       def asset_content(name)
-        File.read(File.expand_path("../../../compiled_assets/#{name}", File.dirname(__FILE__)))
+        File.read(File.expand_path("../../../compiled_assets/#{name}", __dir__))
       end
 
       def style_asset_link
@@ -85,7 +87,7 @@ module RoutesCoverage
       end
 
       def hits_css_class(hits)
-        hits > 0 ? 'cov' : 'uncov'
+        hits.positive? ? 'cov' : 'uncov'
       end
 
       def timeago(time)
@@ -93,24 +95,14 @@ module RoutesCoverage
       end
 
       def all_result_groups
-        return @all_result_groups if @all_result_groups
-
-        @all_result_groups = [
-          {
-            id: 'all_routes',
-            name: 'All Routes',
-            result: result
-          }
-        ]
-        @all_result_groups += groups.map do |group_name, group_result|
-          {
-            id: group_name.gsub(/^[^a-zA-Z]+/, "").gsub(/[^a-zA-Z0-9\-_]/, ""),
-            name: group_name,
-            result: group_result
-          }
-        end
-
-        @all_result_groups
+        @all_result_groups ||= [{ id: 'all_routes', name: 'All Routes', result: result }] +
+                               groups.map do |group_name, group_result|
+                                 {
+                                   id: group_name.gsub(/^[^a-zA-Z]+/, "").gsub(/[^a-zA-Z0-9\-_]/, ""),
+                                   name: group_name,
+                                   result: group_result
+                                 }
+                               end
       end
     end
   end

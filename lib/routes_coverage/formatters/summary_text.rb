@@ -1,12 +1,12 @@
+# frozen_string_literal: true
+
 module RoutesCoverage
   module Formatters
     class SummaryText < Base
       def hits_count(result)
-        "#{result.hit_routes_count} of #{result.expected_routes_count}#{if result.expected_routes_count != result.total_count
-                                                                          "(#{result.total_count} total)"
-                                                                        end} routes hit#{if result.hit_routes_count > 0
-                                                                                           " at #{result.avg_hits} hits average"
-                                                                                         end}"
+        "#{result.hit_routes_count} of #{result.expected_routes_count}"\
+          "#{"(#{result.total_count} total)" if result.expected_routes_count != result.total_count}"\
+          " routes hit#{" at #{result.avg_hits} hits average" if result.hit_routes_count.positive?}"
       end
 
       def status

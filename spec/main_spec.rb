@@ -27,7 +27,7 @@ describe "Minitest coverage" do
     res, code = run_dummy_test 'dummy_test.rb'
     _(code.success?).must_equal true
     _(res).must_match /\d+ assertions, 0 failures, 0 errors, 0 skips/
-    _(res).must_match /Routes coverage is (\d+(.\d+)?)%/
+    _(res).must_match %r{Routes coverage is (\d+(.\d+)?)%}
   end
 
   it "has route listing" do
@@ -109,7 +109,7 @@ describe "Minitest coverage" do
     it "works with rspec" do
       res,code = run_dummy_rspec 'dummy_rspec.rb'
       _(code.success?).must_equal true
-      _(res).must_match /Routes coverage is (\d+(.\d+)?)%/
+      _(res).must_match %r{Routes coverage is (\d+(.\d+)?)%}
     end
   end
 
@@ -117,7 +117,7 @@ describe "Minitest coverage" do
     it "works with simplecov" do
       res,code = run_dummy_test 'dummy_test_simplecov.rb'
       _(code.success?).must_equal true
-      _(res).must_match /Routes coverage is (\d+(.\d+)?)%/
+      _(res).must_match %r{Routes coverage is (\d+(.\d+)?)%}
       _(res).must_match /routes\.html/
       # File.file?(?../routes.html).must_equal true
     end

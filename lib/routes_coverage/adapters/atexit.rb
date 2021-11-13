@@ -11,7 +11,7 @@ module RoutesCoverage
           next if RoutesCoverage.pid != Process.pid
 
           RoutesCoverage.perform_report
-          exit
+          exit # rubocop:disable Rails/Exit
         end
       end
     end

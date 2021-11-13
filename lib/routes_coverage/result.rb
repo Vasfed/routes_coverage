@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_support/core_ext/string' # needed for rails5 version of inspector
 
 module RoutesCoverage
@@ -20,9 +22,7 @@ module RoutesCoverage
         def collect_routes(routes)
           routes.collect do |route|
             ActionDispatch::Routing::RouteWrapper.new(route)
-          end.reject do |route|
-            route.internal?
-          end.collect do |route|
+          end.reject(&:internal?).collect do |route|
             collect_engine_routes(route)
 
             { name: route.name,
