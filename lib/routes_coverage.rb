@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "routes_coverage/version"
 require "routes_coverage/result"
 require "routes_coverage/middleware"
@@ -12,24 +14,13 @@ module RoutesCoverage
     railtie_name :routes_coverage
 
     initializer "request_coverage.inject_test_middleware" do
-      if RoutesCoverage.enabled?
-        ::Rails.application.middleware.use RoutesCoverage::Middleware
-      end
+      ::Rails.application.middleware.use RoutesCoverage::Middleware if RoutesCoverage.enabled?
     end
   end
 
   class Settings
-    attr_reader :exclude_patterns
-    attr_reader :exclude_namespaces
-    attr_accessor :exclude_put_fallbacks
-
-    attr_accessor :perform_report
-    attr_accessor :minimum_coverage
-    attr_accessor :round_precision
-
-    attr_accessor :format
-
-    attr_reader :groups
+    attr_reader :exclude_patterns, :exclude_namespaces, :groups
+    attr_accessor :exclude_put_fallbacks, :perform_report, :minimum_coverage, :round_precision, :format
 
     def initialize
       @exclude_patterns = []
@@ -67,7 +58,7 @@ module RoutesCoverage
   end
 
   def self.configure
-    yield self.settings
+    yield settings
   end
 
   mattr_reader :pid
@@ -83,27 +74,27 @@ module RoutesCoverage
     all_routes = ::Rails.application.routes.routes.routes.dup
 
     if defined?(::Sprockets) && defined?(::Sprockets::Environment)
-      all_routes.reject!{|r| r.app.is_a?(::Sprockets::Environment) }
+      all_routes.reject! { |r| r.app.is_a?(::Sprockets::Environment) }
     end
 
     if settings.exclude_put_fallbacks
-      all_routes.reject!{|put_route|
+      all_routes.reject! do |put_route|
         (
           put_route.verb == /^PUT$/ ||
           put_route.verb == "PUT" # rails 5
         ) &&
-        put_route.name.nil? &&
-        @@route_hit_count[put_route] == 0 &&
-        all_routes.any?{|patch_route|
-          (
-            patch_route.verb == /^PATCH$/ ||
-            patch_route.verb == "PATCH" # rails5
-          ) &&
-          patch_route.defaults == put_route.defaults &&
-          patch_route.ip == put_route.ip &&
-          patch_route.path.spec.to_s == put_route.path.spec.to_s
-        }
-      }
+          put_route.name.nil? &&
+          @@route_hit_count[put_route] == 0 &&
+          all_routes.any? do |patch_route|
+            (
+              patch_route.verb == /^PATCH$/ ||
+              patch_route.verb == "PATCH" # rails5
+            ) &&
+              patch_route.defaults == put_route.defaults &&
+              patch_route.ip == put_route.ip &&
+              patch_route.path.spec.to_s == put_route.path.spec.to_s
+          end
+      end
     end
 
     all_result = Result.new(
@@ -112,8 +103,7 @@ module RoutesCoverage
       settings
     )
 
-
-    groups = Hash[settings.groups.map{|group_name, matcher|
+    groups = settings.groups.map do |group_name, matcher|
       group_routes = all_routes.select do |route|
         if matcher.respond_to?(:call)
           matcher.call(route)
@@ -123,9 +113,11 @@ module RoutesCoverage
               route.path.spec.to_s =~ value
             elsif key == :constraints
               value.all? do |constraint_name, constraint_value|
-                constraint_value.present? ?
-                  route.constraints[constraint_name]&.match?(constraint_value) :
+                if constraint_value.present?
+                  route.constraints[constraint_name]&.match?(constraint_value)
+                else
                   route.constraints[constraint_name].blank?
+                end
               end
             end
           end
@@ -135,20 +127,19 @@ module RoutesCoverage
       end
 
       [group_name,
-        Result.new(
-          group_routes,
-          @@route_hit_count.slice(group_routes),
-          settings
-        )
-      ]
-    }]
+       Result.new(
+         group_routes,
+         @@route_hit_count.slice(group_routes),
+         settings
+       )]
+    end.to_h
 
     if groups.size > 1
-      ungroupped_routes = all_routes.reject{|r|
-        groups.values.any?{|group_routes|
+      ungroupped_routes = all_routes.reject do |r|
+        groups.values.any? do |group_routes|
           group_routes.all_routes.include? r
-        }
-      }
+        end
+      end
 
       if ungroupped_routes.any?
         groups["Ungroupped"] = Result.new(
@@ -163,16 +154,13 @@ module RoutesCoverage
     puts settings.formatter_class.new(all_result, groups, settings).format
   end
 
-
-  def self._touch_route route
+  def self._touch_route(route)
     reset! unless @@route_hit_count
     @@route_hit_count[route] += 1
   end
 end
 
-if defined? RSpec
-  require "routes_coverage/adapters/rspec"
-end
+require "routes_coverage/adapters/rspec" if defined? RSpec
 
 if RoutesCoverage.enabled?
   if defined?(SimpleCov) && SimpleCov.running

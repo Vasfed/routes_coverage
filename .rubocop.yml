@@ -13,3 +13,4 @@ Bundler/OrderedGems: { Enabled: false }
 
 # maybe later
 Style/StringLiterals: { Enabled: false }
+Style/Documentation: { Enabled: false }

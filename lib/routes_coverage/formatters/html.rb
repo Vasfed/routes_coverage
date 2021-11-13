@@ -23,18 +23,19 @@ module RoutesCoverage
         ERB.new(File.read(File.join(File.dirname(__FILE__), "html_views", "#{name}.erb")))
       end
 
-
       def root(root = nil)
-        #TODO: config for this
+        # TODO: config for this
         return SimpleCov.root if defined? SimpleCov
         return @root if defined?(@root) && root.nil?
+
         @root = File.expand_path(root || Dir.getwd)
       end
 
       def coverage_dir(dir = nil)
-        #TODO: config for this
+        # TODO: config for this
         return SimpleCov.coverage_dir if defined? SimpleCov
         return @coverage_dir if defined?(@coverage_dir) && dir.nil?
+
         @coverage_path = nil # invalidate cache
         @coverage_dir = (dir || "coverage")
       end
@@ -51,7 +52,7 @@ module RoutesCoverage
         @project_name ||= File.basename(root.split("/").last).capitalize.tr("_", " ")
       end
 
-      def asset_content name
+      def asset_content(name)
         File.read(File.expand_path("../../../compiled_assets/#{name}", File.dirname(__FILE__)))
       end
 
@@ -83,7 +84,7 @@ module RoutesCoverage
         end
       end
 
-      def hits_css_class hits
+      def hits_css_class(hits)
         hits > 0 ? 'cov' : 'uncov'
       end
 
@@ -91,21 +92,21 @@ module RoutesCoverage
         "<abbr class=\"timeago\" title=\"#{time.iso8601}\">#{time.iso8601}</abbr>"
       end
 
-
       def all_result_groups
         return @all_result_groups if @all_result_groups
+
         @all_result_groups = [
           {
             id: 'all_routes',
             name: 'All Routes',
-            result: result,
+            result: result
           }
         ]
         @all_result_groups += groups.map do |group_name, group_result|
           {
-            id: group_name.gsub(/^[^a-zA-Z]+/, "").gsub(/[^a-zA-Z0-9\-\_]/, ""),
+            id: group_name.gsub(/^[^a-zA-Z]+/, "").gsub(/[^a-zA-Z0-9\-_]/, ""),
             name: group_name,
-            result: group_result,
+            result: group_result
           }
         end
 
