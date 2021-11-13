@@ -114,7 +114,7 @@ module RoutesCoverage
             elsif key == :constraints
               value.all? do |constraint_name, constraint_value|
                 if constraint_value.present?
-                  route.constraints[constraint_name]&.match?(constraint_value)
+                  route.constraints[constraint_name] && route.constraints[constraint_name].match?(constraint_value)
                 else
                   route.constraints[constraint_name].blank?
                 end
