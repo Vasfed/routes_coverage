@@ -1,0 +1,15 @@
+require:
+ - rubocop-rails
+ - rubocop-minitest
+ - rubocop-rake
+
+AllCops:
+  NewCops: enable
+  Exclude:
+    - gemfiles/*
+
+Rails/RakeEnvironment: { Enabled: false }
+Bundler/OrderedGems: { Enabled: false }
+
+# maybe later
+Style/StringLiterals: { Enabled: false }
