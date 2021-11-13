@@ -137,6 +137,10 @@ module RoutesCoverage
             case key
             when :path
               route.path.spec.to_s =~ value
+            when :action
+              route.requirements[:action]&.match(value)
+            when :controller
+              route.requirements[:controller]&.match(value)
             when :constraints
               value.all? do |constraint_name, constraint_value|
                 if constraint_value.present?

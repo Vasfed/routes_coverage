@@ -7,4 +7,5 @@ RoutesCoverage.configure do |config|
   config.groups["Some group"] = %r{^/somespace/}
   config.groups["Foo"] = %r{^/reqs/}
   config.groups["Subdomain"] = { constraints: { subdomain: 'subdomain' } }
+  config.groups["Controller"] = { controller: 'dummy', action: /\Aupdat/ }
 end
