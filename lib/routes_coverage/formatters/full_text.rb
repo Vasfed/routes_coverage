@@ -6,7 +6,7 @@ module RoutesCoverage
       class RouteFormatter
         attr_reader :buffer
 
-        def initialize(result = nil, _settings = nil, output_hits = false)
+        def initialize(result = nil, _settings = nil, output_hits: false)
           @buffer = []
           @result = result
           @output_hits = output_hits
@@ -95,7 +95,7 @@ module RoutesCoverage
         pending_routes = collect_routes(result.pending_routes)
 
         <<~TXT
-          #{routes_section(RouteFormatter.new(result, settings, true), 'Covered routes:', hit_routes)}
+          #{routes_section(RouteFormatter.new(result, settings, output_hits: true), 'Covered routes:', hit_routes)}
 
           #{routes_section(RouteFormatter.new(result, settings), 'Pending routes:', pending_routes)}
         TXT

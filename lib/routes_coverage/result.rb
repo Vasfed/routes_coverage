@@ -22,7 +22,7 @@ module RoutesCoverage
         def collect_routes(routes)
           routes.collect do |route|
             ActionDispatch::Routing::RouteWrapper.new(route)
-          end.reject(&:internal?).collect do |route|
+          end.reject(&:internal?).collect do |route| # rubocop:disable Style/MultilineBlockChain
             collect_engine_routes(route)
 
             { name: route.name,
@@ -40,7 +40,7 @@ module RoutesCoverage
       require 'rails/application/route_inspector'
       class Inspector < Rails::Application::RouteInspector
         NEW_RAILS = false
-        def collect_all_routes(routes)
+        def collect_all_routes(routes) # rubocop:disable Lint/DuplicateMethods
           res = collect_routes(routes)
           @engines.each do |engine_name, engine_routes|
             res += engine_routes.map  do |er|
@@ -50,7 +50,7 @@ module RoutesCoverage
           res
         end
 
-        def collect_routes(routes)
+        def collect_routes(routes) # rubocop:disable Lint/DuplicateMethods
           routes = routes.collect do |route|
             route_reqs = route.requirements
 
@@ -96,10 +96,10 @@ module RoutesCoverage
       namespaces_regex = Regexp.union(@settings.exclude_namespaces.map { |n| %r{^/#{n}} })
 
       routes_groups = all_routes.group_by do |r|
-        !!(
+        (
           ("#{r.verb.to_s[8..-3]} #{r.path.spec}".strip =~ filter_regex) ||
           (r.path.spec.to_s =~ namespaces_regex)
-        )
+        ).present?
       end
 
       @excluded_routes = routes_groups[true] || []

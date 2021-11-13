@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RoutesCoverage
   class Middleware
     def initialize(app)

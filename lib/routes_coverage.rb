@@ -84,7 +84,7 @@ module RoutesCoverage
           put_route.verb == "PUT" # rails 5
         ) &&
           put_route.name.nil? &&
-          @@route_hit_count[put_route] == 0 &&
+          @@route_hit_count[put_route].zero? &&
           all_routes.any? do |patch_route|
             (
               patch_route.verb == /^PATCH$/ ||
@@ -97,11 +97,7 @@ module RoutesCoverage
       end
     end
 
-    all_result = Result.new(
-      all_routes,
-      @@route_hit_count,
-      settings
-    )
+    all_result = Result.new(all_routes, @@route_hit_count, settings)
 
     groups = settings.groups.map do |group_name, matcher|
       group_routes = all_routes.select do |route|
@@ -109,9 +105,10 @@ module RoutesCoverage
           matcher.call(route)
         elsif matcher.is_a?(Hash)
           matcher.all? do |key, value|
-            if key == :path
+            case key
+            when :path
               route.path.spec.to_s =~ value
-            elsif key == :constraints
+            when :constraints
               value.all? do |constraint_name, constraint_value|
                 if constraint_value.present?
                   route.constraints[constraint_name] && route.constraints[constraint_name].match?(constraint_value)
@@ -126,12 +123,7 @@ module RoutesCoverage
         end
       end
 
-      [group_name,
-       Result.new(
-         group_routes,
-         @@route_hit_count.slice(group_routes),
-         settings
-       )]
+      [group_name, Result.new(group_routes, @@route_hit_count.slice(group_routes), settings)]
     end.to_h
 
     if groups.size > 1
@@ -151,7 +143,7 @@ module RoutesCoverage
     end
 
     puts
-    puts settings.formatter_class.new(all_result, groups, settings).format
+    puts settings.formatter_class.new(all_result, groups, settings).format # rubocop:disable Rails/Output
   end
 
   def self._touch_route(route)

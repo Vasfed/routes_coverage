@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 ENV['RAILS_ENV'] = 'test'
 require_relative 'dummy_app'
@@ -11,24 +12,23 @@ end
 
 DummyApplication.routes.draw do
   get 'rec', to: 'dummy#index',
-             constraints: -> (request) { request.params[:TYPE] == '1' },
+             constraints: ->(request) { request.params[:TYPE] == '1' },
              as: :route1
   get 'rec', to: 'dummy#update',
-             constraints: -> (request) { request.params[:TYPE] == '2' },
+             constraints: ->(request) { request.params[:TYPE] == '2' },
              as: :route2
   get 'rec/:TYPE', to: 'dummy#current', constraints: CustomConstraintsClass, as: :route3
 end
 
 DummyApplication.config.action_dispatch.show_exceptions = false
 
-RoutesCoverage.configure do|config|
+RoutesCoverage.configure do |config|
   config.format = :full_text
 end
 
-
 class DummyRequestTest < ActionDispatch::IntegrationTest
   def test_coverage_enabled
-    assert_equal RoutesCoverage.enabled?, true
+    assert(RoutesCoverage.enabled?)
   end
 
   def test_patch
@@ -45,6 +45,4 @@ class DummyRequestTest < ActionDispatch::IntegrationTest
       get '/rec?TYPE=4'
     end
   end
-
-
 end
