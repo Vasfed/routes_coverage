@@ -113,11 +113,31 @@ module RoutesCoverage
     )
 
 
-    groups = Hash[settings.groups.map{|group_name, regex|
+    groups = Hash[settings.groups.map{|group_name, matcher|
+      group_routes = all_routes.select do |route|
+        if matcher.respond_to?(:call)
+          matcher.call(route)
+        elsif matcher.is_a?(Hash)
+          matcher.all? do |key, value|
+            if key == :path
+              route.path.spec.to_s =~ value
+            elsif key == :constraints
+              value.all? do |constraint_name, constraint_value|
+                constraint_value.present? ?
+                  route.constraints[constraint_name]&.match?(constraint_value) :
+                  route.constraints[constraint_name].blank?
+              end
+            end
+          end
+        else
+          route.path.spec.to_s.match?(matcher)
+        end
+      end
+
       [group_name,
         Result.new(
-          all_routes.select{|r| r.path.spec.to_s =~ regex},
-          Hash[@@route_hit_count.select{|r,_hits| r.path.spec.to_s =~ regex}],
+          group_routes,
+          @@route_hit_count.slice(group_routes),
           settings
         )
       ]
@@ -133,7 +153,7 @@ module RoutesCoverage
       if ungroupped_routes.any?
         groups["Ungroupped"] = Result.new(
           ungroupped_routes,
-          Hash[@@route_hit_count.select{|r,_hits| ungroupped_routes.include? r}],
+          @@route_hit_count.slice(ungroupped_routes),
           settings
         )
       end

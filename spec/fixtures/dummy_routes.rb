@@ -12,5 +12,7 @@ DummyApplication.routes.draw do
     resources :bar, only:[:index]
   end
 
+  resources :subdomain_route, only:[:index], constraints: { subdomain: 'subdomain' }
+
   get 'r*catch_almost_all_route', to: 'dummy#not_found_error'
 end

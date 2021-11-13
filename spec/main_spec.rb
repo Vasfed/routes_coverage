@@ -91,6 +91,14 @@ describe "Minitest coverage" do
     _(res).must_match %r|GET\s+/rec/:TYPE\(\.:format\)\s+dummy#current\s+1|
   end
 
+  it "groups" do
+    res, code = run_dummy_test 'dummy_test_groups.rb'
+    _(code.success?).must_equal true
+    _(res).must_include "Some group: 0.0% (0 of 1 routes hit)"
+    _(res).must_include "Foo: 0.0% (0 of 3 routes hit)"
+    _(res).must_include "Subdomain: 0.0% (0 of 1 routes hit)"
+  end
+
   it "working mounted engines, including Sprockets" do
     skip if Rails.version < '4'
     res, code = run_dummy_test 'sprockets_test.rb'

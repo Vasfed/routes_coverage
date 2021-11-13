@@ -41,6 +41,7 @@ RSpec.configure do |config|
   config.routes_coverage.exclude_namespaces << 'somenamespace' # excludes /somenamespace/*
 
   config.routes_coverage.groups["Some Route group title"] = %r{^/somespace/}
+  config.routes_coverage.groups["Subdomain"] = { constraints: { subdomain: 'some_subdomain' }, path: '/' }
   config.routes_coverage.groups["Admin"] = Regexp.union([
     %r{^/admin/},
     %r{^/secret_place/},
