@@ -54,23 +54,51 @@ module RoutesCoverage
   end
 
   def self.settings
-    @@settings ||= Settings.new
+    @settings ||= Settings.new
   end
 
   def self.configure
     yield settings
   end
 
-  mattr_reader :pid
+  # used in at_exit adapter to skip subprocesses
+  def self.pid
+    @pid
+  end
+
+  def self.route_hit_count
+    @route_hit_count
+  end
 
   def self.reset!
-    @@route_hit_count = Hash.new(0)
-    @@pid = Process.pid
+    @route_hit_count = Hash.new(0)
+    @pid = Process.pid
   end
 
   def self.perform_report
     return unless settings.perform_report
 
+    all_routes = _collect_all_routes
+    all_result = Result.new(all_routes, route_hit_count, settings)
+    groups = _collect_route_groups(all_routes)
+
+    if groups.size > 1
+      ungroupped_routes = all_routes.reject do |r|
+        groups.values.any? do |group_routes|
+          group_routes.all_routes.include? r
+        end
+      end
+
+      if ungroupped_routes.any?
+        groups["Ungroupped"] = Result.new(ungroupped_routes, route_hit_count.slice(ungroupped_routes), settings)
+      end
+    end
+
+    puts
+    puts settings.formatter_class.new(all_result, groups, settings).format # rubocop:disable Rails/Output
+  end
+
+  def self._collect_all_routes
     all_routes = ::Rails.application.routes.routes.routes.dup
 
     if defined?(::Sprockets) && defined?(::Sprockets::Environment)
@@ -84,7 +112,7 @@ module RoutesCoverage
           put_route.verb == "PUT" # rails 5
         ) &&
           put_route.name.nil? &&
-          @@route_hit_count[put_route].zero? &&
+          route_hit_count[put_route].zero? &&
           all_routes.any? do |patch_route|
             (
               patch_route.verb == /^PATCH$/ ||
@@ -96,10 +124,11 @@ module RoutesCoverage
           end
       end
     end
+    all_routes
+  end
 
-    all_result = Result.new(all_routes, @@route_hit_count, settings)
-
-    groups = settings.groups.map do |group_name, matcher|
+  def self._collect_route_groups(all_routes)
+    settings.groups.map do |group_name, matcher|
       group_routes = all_routes.select do |route|
         if matcher.respond_to?(:call)
           matcher.call(route)
@@ -123,32 +152,13 @@ module RoutesCoverage
         end
       end
 
-      [group_name, Result.new(group_routes, @@route_hit_count.slice(group_routes), settings)]
+      [group_name, Result.new(group_routes, route_hit_count.slice(group_routes), settings)]
     end.to_h
-
-    if groups.size > 1
-      ungroupped_routes = all_routes.reject do |r|
-        groups.values.any? do |group_routes|
-          group_routes.all_routes.include? r
-        end
-      end
-
-      if ungroupped_routes.any?
-        groups["Ungroupped"] = Result.new(
-          ungroupped_routes,
-          @@route_hit_count.slice(ungroupped_routes),
-          settings
-        )
-      end
-    end
-
-    puts
-    puts settings.formatter_class.new(all_result, groups, settings).format # rubocop:disable Rails/Output
   end
 
   def self._touch_route(route)
-    reset! unless @@route_hit_count
-    @@route_hit_count[route] += 1
+    reset! unless route_hit_count
+    route_hit_count[route] += 1
   end
 end
 
