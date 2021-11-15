@@ -90,7 +90,7 @@ module RoutesCoverage
       end
 
       if ungroupped_routes.any?
-        groups["Ungroupped"] = Result.new(ungroupped_routes, route_hit_count.slice(ungroupped_routes), settings)
+        groups["Ungroupped"] = Result.new(ungroupped_routes, route_hit_count.slice(*ungroupped_routes), settings)
       end
     end
 
@@ -156,7 +156,7 @@ module RoutesCoverage
         end
       end
 
-      [group_name, Result.new(group_routes, route_hit_count.slice(group_routes), settings)]
+      [group_name, Result.new(group_routes, route_hit_count.slice(*group_routes), settings)]
     end.to_h
   end
 

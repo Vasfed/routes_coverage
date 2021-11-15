@@ -98,8 +98,9 @@ describe "Minitest coverage" do
     res, code = run_dummy_test 'dummy_test_groups.rb'
     _(code.success?).must_equal true
     _(res).must_include "Some group: 0.0% (0 of 1 routes hit)"
-    _(res).must_include "Foo: 0.0% (0 of 3 routes hit)"
+    _(res).must_include "Foo: 33.3% (1 of 3 routes hit at 1.0 hits average)"
     _(res).must_include "Subdomain: 0.0% (0 of 1 routes hit)"
+    _(res).must_include "Ungroupped: 33.3% (1 of 3 routes hit at 1.0 hits average)"
   end
 
   it "working mounted engines, including Sprockets" do
