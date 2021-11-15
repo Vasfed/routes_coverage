@@ -18,11 +18,11 @@ describe "Minitest coverage" do
   end
 
   def run_dummy_test(testfile = 'dummy_test.rb')
-    run_cmd "bundle exec ruby #{File.dirname(__FILE__)}/fixtures/#{testfile}"
+    run_cmd("bundle exec ruby #{__dir__}/fixtures/#{testfile}")
   end
 
   def run_dummy_rspec(testfile = 'dummy_rspec.rb')
-    run_cmd "bundle exec rspec #{File.dirname(__FILE__)}/fixtures/#{testfile}"
+    run_cmd("bundle exec rspec #{__dir__}/fixtures/#{testfile}")
   end
 
   it "works" do
@@ -108,6 +108,19 @@ describe "Minitest coverage" do
     res, code = run_dummy_test 'sprockets_test.rb'
     _(code.success?).must_equal true
     _(res).must_match(/Routes coverage is (\d+(.\d+)?)%/)
+  end
+
+  it "inferring coverage by controller tests" do
+    ENV['INFER_FROM_CONTROLLER'] = '1'
+    res, code = run_dummy_test 'dummy_controller_test.rb'
+    route_regex = %r{GET\s+/reqs\(\.:format\)\s+dummy#index\s+1}
+    _(code.success?).must_equal true
+    _(res).must_match(route_regex)
+
+    ENV['INFER_FROM_CONTROLLER'] = '0'
+    res, code = run_dummy_test 'dummy_controller_test.rb'
+    _(code.success?).must_equal true
+    _(res).wont_match(route_regex)
   end
 
   if defined? RSpec

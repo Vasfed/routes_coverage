@@ -10,17 +10,43 @@ require "routes_coverage/formatters/full_text"
 require "routes_coverage/formatters/html"
 
 module RoutesCoverage
+  module ActionControllerTestCase
+    def process(action, *args)
+      return super unless RoutesCoverage.settings.include_from_controller_tests
+
+      super.tap { RoutesCoverage._touch_request(@request) }
+    end
+  end
+
+  module ActionControllerTestCaseKvargs
+    def process(action, **kvargs)
+      return super unless RoutesCoverage.settings.include_from_controller_tests
+
+      super.tap { RoutesCoverage._touch_request(@request) }
+    end
+  end
+
   class Railtie < ::Rails::Railtie
     railtie_name :routes_coverage
 
     initializer "request_coverage.inject_test_middleware" do
       ::Rails.application.middleware.use RoutesCoverage::Middleware if RoutesCoverage.enabled?
+
+      ActiveSupport.on_load(:action_controller_test_case) do |klass|
+        if Rails.version >= '5.1'
+          klass.prepend RoutesCoverage::ActionControllerTestCaseKvargs
+        else
+          klass.prepend RoutesCoverage::ActionControllerTestCase
+        end
+      end
     end
   end
 
   class Settings
     attr_reader :exclude_patterns, :exclude_namespaces, :groups
-    attr_accessor :exclude_put_fallbacks, :perform_report, :minimum_coverage, :round_precision, :format
+    attr_accessor :perform_report, :format, :minimum_coverage, :round_precision,
+                  :exclude_put_fallbacks,
+                  :include_from_controller_tests
 
     def initialize
       @exclude_patterns = []
@@ -158,6 +184,30 @@ module RoutesCoverage
 
       [group_name, Result.new(group_routes, route_hit_count.slice(*group_routes), settings)]
     end.to_h
+  end
+
+  # NB: router changes env/request during recognition
+  def self._touch_request(req)
+    ::Rails.application.routes.router.recognize(req) do |route, parameters5, parameters4|
+      parameters = parameters5 || parameters4
+      dispatcher = route.app
+      if dispatcher.respond_to?(:dispatcher?)
+        req.path_parameters = parameters
+        dispatcher = nil unless dispatcher.matches?(req) # && dispatcher.dispatcher?
+      else # rails < 4.2
+        dispatcher = route.app
+        req.env['action_dispatch.request.path_parameters'] =
+          (env['action_dispatch.request.path_parameters'] || {}).merge(parameters)
+        while dispatcher.is_a?(ActionDispatch::Routing::Mapper::Constraints)
+          dispatcher = (dispatcher.app if dispatcher.matches?(env))
+        end
+      end
+      next unless dispatcher
+
+      RoutesCoverage._touch_route(route)
+      # there may be multiple matching routes - we should match only first
+      break
+    end
   end
 
   def self._touch_route(route)

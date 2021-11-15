@@ -16,6 +16,7 @@ Rake::TestTask.new(:dummytest_html) { |t| t.pattern = 'spec/fixtures/dummy_html.
 Rake::TestTask.new(:dummytest_full) { |t| t.pattern = 'spec/fixtures/dummy_test_full.rb' }
 Rake::TestTask.new(:dummytest_filter) { |t| t.pattern = 'spec/fixtures/dummy_test_nsfilters.rb' }
 Rake::TestTask.new(:dummytest_groups) { |t| t.pattern = 'spec/fixtures/dummy_test_groups.rb' }
+Rake::TestTask.new(:dummytest_controller) { |t| t.pattern = 'spec/fixtures/dummy_controller_test.rb' }
 
 task default: :spec
 

@@ -37,6 +37,7 @@ RSpec.configure do |config|
   config.routes_coverage.perform_report = ENV['ROUTES_COVERAGE'] # only generate report if env var is set
 
   config.routes_coverage.exclude_put_fallbacks = true # exclude non-hit PUT-requests where a matching PATCH exists
+  config.routes_coverage.include_from_controller_tests = true # include results from controller tests
   config.routes_coverage.exclude_patterns << %r{PATCH /reqs}   # excludes all requests matching regex
   config.routes_coverage.exclude_namespaces << 'somenamespace' # excludes /somenamespace/*
 
@@ -70,7 +71,9 @@ or
 RoutesCoverage.settings.format = :full_text
 ```
 
-
+Note that coverage from `include_from_controller_tests` (disabled by default) is not a true routes coverage.
+Rounting is not tested in controller tests (which are deprecated in Rails 5),
+but sometimes you may already have a lot of controller tests and an intent to improve green-path/business level coverage
 
 ## Development
 
