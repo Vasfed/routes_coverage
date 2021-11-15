@@ -90,20 +90,20 @@ module RoutesCoverage
     attr_reader :all_routes, :route_hit_counts
 
     def expected_routes
-      return @expected_routes if @expected_routes
+      @expected_routes ||= begin
+        filter_regex = Regexp.union(@settings.exclude_patterns)
+        namespaces_regex = Regexp.union(@settings.exclude_namespaces.map { |n| %r{^/#{n}} })
 
-      filter_regex = Regexp.union(@settings.exclude_patterns)
-      namespaces_regex = Regexp.union(@settings.exclude_namespaces.map { |n| %r{^/#{n}} })
+        routes_groups = all_routes.group_by do |r|
+          (
+            ("#{r.verb.to_s[8..-3]} #{r.path.spec}".strip =~ filter_regex) ||
+            (r.path.spec.to_s =~ namespaces_regex)
+          ).present?
+        end
 
-      routes_groups = all_routes.group_by do |r|
-        (
-          ("#{r.verb.to_s[8..-3]} #{r.path.spec}".strip =~ filter_regex) ||
-          (r.path.spec.to_s =~ namespaces_regex)
-        ).present?
+        @excluded_routes = routes_groups[true] || []
+        routes_groups[false] || []
       end
-
-      @excluded_routes = routes_groups[true] || []
-      @expected_routes = routes_groups[false] || []
     end
 
     def pending_routes
