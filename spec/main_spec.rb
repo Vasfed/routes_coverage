@@ -105,7 +105,7 @@ describe "Minitest coverage" do
   end
 
   it "working mounted engines, including Sprockets" do
-    skip if Rails.version < '4'
+    skip if Rails.version < '4' || Rails.version >= '7'
     res, code = run_dummy_test 'sprockets_test.rb'
     assert(code.success?)
     assert_match(/Routes coverage is (\d+(.\d+)?)%/, res)
@@ -132,15 +132,23 @@ describe "Minitest coverage" do
     assert_includes(res, "Controller somespace/foo looks not existing")
     assert_includes(res, "Controller otherspace/bar looks not existing")
     assert_includes(res, "Controller subdomain_route looks not existing")
-    assert_includes(res, "Missing 6 actions:")
 
-    _, missing_actions = res.split("Missing 6 actions:\n", 2)
-    assert_equal(<<~TXT, missing_actions)
+    expected_count = 6
+    expected_output = <<~TXT
       dummy: create, except: %i[new create show edit destroy], only: %i[index update] ,  Missing custom: some_custom, not_found_error
       somespace/foo: index, except: %i[index new create show edit update destroy], only: %i[]
       otherspace/bar: index, except: %i[index new create show edit update destroy], only: %i[]
       subdomain_route: index, except: %i[index new create show edit update destroy], only: %i[]
     TXT
+
+    if res.include?('Controller rails/welcome failed to load') # rails 7 has bug
+      expected_count = 7
+      expected_output += "rails/welcome: index, except: %i[index new create show edit update destroy], only: %i[]\n"
+    end
+
+    assert_includes(res, "Missing #{expected_count} actions:")
+    _, missing_actions = res.split("Missing #{expected_count} actions:\n", 2)
+    assert_equal(expected_output, missing_actions)
   end
 
   if defined? RSpec

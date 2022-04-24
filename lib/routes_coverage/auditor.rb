@@ -37,6 +37,10 @@ module RoutesCoverage
       controllers_hash[controller_name] ||= "#{controller_name}_controller".classify.constantize
       logger.warn "Controller #{controller_name} was not collected, but exists"
       controllers_hash[controller_name]
+    rescue ArgumentError => e
+      @missing_controllers << controller_name
+      logger.warn "Controller #{controller_name} failed to load: #{e}"
+      nil
     rescue NameError
       @missing_controllers << controller_name
       logger.warn "Controller #{controller_name} looks not existing"

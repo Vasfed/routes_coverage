@@ -6,22 +6,30 @@ jobs:
 
     strategy:
       matrix:
+        # lockfiles are not commited, so autodetection will not work, need to specify bundler version
         include:
           - ruby-version: 2.3.8
             rails-version: 3
+            bundler-version: 1.17.3
           - ruby-version: 2.3.8
             rails-version: 40
+            bundler-version: 1.17.3
           - ruby-version: 2.3.8
             rails-version: 42
+            bundler-version: 1.17.3
 
           - ruby-version: 2.3.8
             rails-version: 50_rspec
+            bundler-version: default
           - ruby-version: 2.6.9
             rails-version: 50_simplecov
+            bundler-version: default
           - ruby-version: 2.7.5
             rails-version: 6
-          # - ruby-version: 2.7.5
-          #   rails-version: 70
+            bundler-version: default
+          - ruby-version: 3.1.2
+            rails-version: 7
+            bundler-version: default
 
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/rails_${{ matrix.rails-version }}.gemfile
@@ -33,7 +41,7 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
-          bundler: '1.17.3'
+          bundler: ${{ matrix.bundler-version }}
 
       - name: Run tests
         run: |
