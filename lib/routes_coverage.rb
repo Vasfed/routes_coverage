@@ -19,10 +19,14 @@ module RoutesCoverage
   end
 
   module ActionControllerTestCaseKvargs
-    def process(action, **kvargs)
-      return super unless RoutesCoverage.settings.include_from_controller_tests
+    if RUBY_VERSION >= '2'
+      class_eval <<-RUBY, __FILE__, __LINE__+1
+        def process(action, **kvargs)
+          return super unless RoutesCoverage.settings.include_from_controller_tests
 
-      super.tap { RoutesCoverage._touch_request(@request) }
+          super.tap { RoutesCoverage._touch_request(@request) }
+        end
+      RUBY
     end
   end
 
@@ -154,7 +158,7 @@ module RoutesCoverage
   end
 
   def self._collect_route_groups(all_routes)
-    settings.groups.map do |group_name, matcher|
+    Hash[settings.groups.map do |group_name, matcher|
       group_routes = all_routes.select do |route|
         if matcher.respond_to?(:call)
           matcher.call(route)
@@ -164,9 +168,9 @@ module RoutesCoverage
             when :path
               route.path.spec.to_s =~ value
             when :action
-              route.requirements[:action]&.match(value)
+              route.requirements[:action] && route.requirements[:action].match(value)
             when :controller
-              route.requirements[:controller]&.match(value)
+              route.requirements[:controller] && route.requirements[:controller].match(value)
             when :constraints
               value.all? do |constraint_name, constraint_value|
                 if constraint_value.present?
@@ -183,7 +187,7 @@ module RoutesCoverage
       end
 
       [group_name, Result.new(group_routes, route_hit_count.slice(*group_routes), settings)]
-    end.to_h
+    end]
   end
 
   # NB: router changes env/request during recognition

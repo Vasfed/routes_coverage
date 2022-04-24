@@ -6,11 +6,16 @@ module RoutesCoverage
       class RouteFormatter
         attr_reader :buffer
 
-        def initialize(result = nil, _settings = nil, output_hits: false)
+        def initialize(result = nil, _settings = nil)
           @buffer = []
           @result = result
-          @output_hits = output_hits
+          @output_hits = false
           @output_prefix = false
+        end
+
+        def with_hits
+          @output_hits = true
+          self
         end
 
         def result
@@ -63,7 +68,7 @@ module RoutesCoverage
         end
 
         def widths(routes)
-          %i[name verb path reqs].map do |key|
+          [:name, :verb, :path, :reqs].map do |key|
             routes.map { |r| r[key].length }.max.to_i
           end
         end
@@ -94,11 +99,9 @@ module RoutesCoverage
         hit_routes = collect_routes(result.hit_routes)
         pending_routes = collect_routes(result.pending_routes)
 
-        <<~TXT
-          #{routes_section(RouteFormatter.new(result, settings, output_hits: true), 'Covered routes:', hit_routes)}
-
-          #{routes_section(RouteFormatter.new(result, settings), 'Pending routes:', pending_routes)}
-        TXT
+        "#{routes_section(RouteFormatter.new(result, settings).with_hits, 'Covered routes:', hit_routes)}\n"\
+        "\n"\
+        "#{routes_section(RouteFormatter.new(result, settings), 'Pending routes:', pending_routes)}"
       end
 
       def format
