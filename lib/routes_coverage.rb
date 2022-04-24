@@ -170,7 +170,7 @@ module RoutesCoverage
             when :constraints
               value.all? do |constraint_name, constraint_value|
                 if constraint_value.present?
-                  route.constraints[constraint_name] && route.constraints[constraint_name].match?(constraint_value)
+                  route.constraints[constraint_name] && route.constraints[constraint_name].match(constraint_value)
                 else
                   route.constraints[constraint_name].blank?
                 end
@@ -178,7 +178,7 @@ module RoutesCoverage
             end
           end
         else
-          route.path.spec.to_s.match?(matcher)
+          route.path.spec.to_s.match(matcher)
         end
       end
 
@@ -197,9 +197,9 @@ module RoutesCoverage
       else # rails < 4.2
         dispatcher = route.app
         req.env['action_dispatch.request.path_parameters'] =
-          (env['action_dispatch.request.path_parameters'] || {}).merge(parameters)
+          (req.env['action_dispatch.request.path_parameters'] || {}).merge(parameters)
         while dispatcher.is_a?(ActionDispatch::Routing::Mapper::Constraints)
-          dispatcher = (dispatcher.app if dispatcher.matches?(env))
+          dispatcher = (dispatcher.app if dispatcher.matches?(req.env))
         end
       end
       next unless dispatcher

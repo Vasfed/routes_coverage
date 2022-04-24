@@ -3,6 +3,7 @@
 # to test against all, run: appraisal rake spec
 
 if RUBY_VERSION <= '2.4'
+  # to get a working ruby 2.3: `docker run --rm -it --volume $PWD:/app ruby:2.3-stretch bash`
   appraise 'rails-3' do
     gem 'rails', '~>3.2.22'
     gem 'test-unit'

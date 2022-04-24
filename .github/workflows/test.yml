@@ -1,0 +1,40 @@
+name: Test
+on: [push]
+jobs:
+  runTests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - ruby-version: 2.3.8
+            rails-version: 3
+          - ruby-version: 2.3.8
+            rails-version: 40
+          - ruby-version: 2.3.8
+            rails-version: 42
+
+          - ruby-version: 2.3.8
+            rails-version: 50_rspec
+          - ruby-version: 2.6.9
+            rails-version: 50_simplecov
+          - ruby-version: 2.7.5
+            rails-version: 6
+          # - ruby-version: 2.7.5
+          #   rails-version: 70
+
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/rails_${{ matrix.rails-version }}.gemfile
+
+    steps:
+      - uses: actions/checkout@master
+      - name: Install ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+          bundler-cache: true
+          bundler: '1.17.3'
+
+      - name: Run tests
+        run: |
+          bundle exec rake spec

@@ -6,7 +6,7 @@ source 'https://rubygems.org'
 # NB: all other non-listed gems should go into Appraisals,
 # this file is only for quick tests
 
-unless defined?(Appraisal)
+unless defined?(Appraisal) || RUBY_VERSION < '2.6'
   # rails should be included before us
   gem 'rails', '~>5.2.6'
   gem 'simplecov', require: false
