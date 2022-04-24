@@ -12,7 +12,6 @@ RoutesCoverage.settings.include_from_controller_tests = ENV['INFER_FROM_CONTROLL
 # ActionController::TestCase is deprecated in rails 5 in favour of ActionDispatch::IntegrationTest
 # but main purpose of routes_coverage is raising test coverage in old apps prior to upgrade, so need to support it:
 class DummyControllerTest < ActionController::TestCase
-  include ActionController::TestCase::Behavior
   tests DummyController
 
   # in a non-fully initialized app this seems to be necessary:

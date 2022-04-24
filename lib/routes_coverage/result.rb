@@ -95,8 +95,10 @@ module RoutesCoverage
         namespaces_regex = Regexp.union(@settings.exclude_namespaces.map { |n| %r{^/#{n}} })
 
         routes_groups = all_routes.group_by do |r|
+          # rails <=4 has regex in verb
+          verb = r.verb.is_a?(Regexp) && r.verb.inspect.gsub(/[^\w]/, '') || r.verb
           (
-            ("#{r.verb.to_s[8..-3]} #{r.path.spec}".strip =~ filter_regex) ||
+            ("#{verb} #{r.path.spec}".strip =~ filter_regex) ||
             (r.path.spec.to_s =~ namespaces_regex)
           ).present?
         end

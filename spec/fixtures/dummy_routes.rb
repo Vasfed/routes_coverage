@@ -18,3 +18,10 @@ DummyApplication.routes.draw do
 
   get 'r*catch_almost_all_route', to: 'dummy#not_found_error'
 end
+
+# patch to fix rails 4
+class DummyController < ActionController::Base
+  def _routes
+    Rails.application.routes
+  end
+end
