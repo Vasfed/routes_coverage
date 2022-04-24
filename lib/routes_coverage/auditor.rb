@@ -14,7 +14,12 @@ module RoutesCoverage
         Rails.application.eager_load!
 
         logger.info "Collecting controllers"
-        ActionController::Base.descendants + ActionController::API.descendants
+        if defined?(ActionController::API)
+          ActionController::Base.descendants + ActionController::API.descendants
+        else
+          # older rails
+          ActionController::Base.descendants
+        end
       end
     end
 
@@ -35,6 +40,7 @@ module RoutesCoverage
     rescue NameError
       @missing_controllers << controller_name
       logger.warn "Controller #{controller_name} looks not existing"
+      nil
     end
 
     def existing_actions_usage_hash
@@ -45,14 +51,18 @@ module RoutesCoverage
           controller_name = controller.name.sub(/Controller$/, "").underscore
           controller.action_methods.map { |action| "#{controller_name}##{action}" }
         end
-        controller_actions.flatten.to_h { |action| [action, 0] }
+        controller_actions.flatten.map { |action| [action, 0] }.to_h
       end
+    end
+
+    def all_routes
+      # NB: there're no engines
+      @all_routes ||= RoutesCoverage._collect_all_routes
     end
 
     def perform
       require 'routes_coverage'
-      # NB: there're no engines
-      routes = RoutesCoverage._collect_all_routes
+      routes = all_routes
 
       @missing_actions = Hash.new(0)
       @existing_actions_usage_hash = nil
@@ -104,19 +114,33 @@ module RoutesCoverage
     end
 
     def print_missing_actions
-      logger.info "Missing #{missing_actions.count} actions:"
+      logger.info "\nMissing #{missing_actions.count} actions:"
 
-      # NB: для `resource` могут лезть лишние index в преложениях
+      # NB: for singular `resource` there may be unnecessary `index` in suggestions
       restful_actions = %w[index new create show edit update destroy].freeze
+
+      declared_restful = all_routes.select { |route|
+        route.respond_to?(:requirements) && route.requirements[:controller] &&
+        restful_actions.include?(route.requirements[:action])
+      }.group_by{ |route| route.requirements[:controller]}
+
       missing_actions.keys.map { |action| action.split('#', 2) }.group_by(&:first).each do |(controller, actions)|
         missing = actions.map(&:last)
-        if (restful_actions & missing).any?
-          logger.info "#{controller}, except: %i[#{(restful_actions & missing).join(' ')}], "\
-                      "only: %i[#{(restful_actions - missing).join(' ')}]"
-        end
+        next if missing.empty?
 
-        missing_custom = missing - restful_actions
-        logger.info "#{controller} missing custom: #{missing_custom.join(', ')}" if missing_custom.any?
+        undeclared_restful = restful_actions - declared_restful[controller].map{|r| r.requirements[:action] }
+        logger.info([
+          "#{controller}:",
+          (if (restful_actions & missing).any?
+            "#{(missing & restful_actions).join(', ')}"\
+            ", except: %i[#{(restful_actions & (missing + undeclared_restful)).join(' ')}]"\
+            ", only: %i[#{(restful_actions - (missing + undeclared_restful)).join(' ')}]"
+          end),
+          (if (missing - restful_actions).any?
+            ",  Missing custom: #{(missing - restful_actions).join(', ')}"
+          end)
+
+        ].compact.join(' '))
       end
     end
 
