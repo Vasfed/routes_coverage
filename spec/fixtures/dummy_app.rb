@@ -26,6 +26,11 @@ class DummyController < ActionController::Base
   def update
     render status: :ok, inline: 'lala'
   end
+
+  # patch to fix rails 4 tests
+  def _routes
+    Rails.application.routes
+  end
 end
 
 DummyApplication.initialize!
