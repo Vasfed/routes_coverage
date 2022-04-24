@@ -55,7 +55,7 @@ module RoutesCoverage
           controller_name = controller.name.sub(/Controller$/, "").underscore
           controller.action_methods.map { |action| "#{controller_name}##{action}" }
         end
-        controller_actions.flatten.map { |action| [action, 0] }.to_h
+        Hash[controller_actions.flatten.map { |action| [action, 0] }]
       end
     end
 
@@ -78,8 +78,9 @@ module RoutesCoverage
           existing_actions_usage_hash[action] += 1
         else
           # there may be inheritance or implicit renders
-          controller_instance = controller_class_by_name(route.requirements[:controller])&.new
-          unless controller_instance&.available_action?(route.requirements[:action])
+          controller_class = controller_class_by_name(route.requirements[:controller])
+          controller_instance = controller_class && controller_class.new
+          unless controller_instance && controller_instance.available_action?(route.requirements[:action])
             if controller_instance.respond_to?(route.requirements[:action])
               logger.warn "No action, but responds: #{action}"
             end
@@ -101,14 +102,15 @@ module RoutesCoverage
       @unused_actions ||= begin
         # methods with special suffixes are obviously not actions, reduce noise:
         unused_actions_from_hash = existing_actions_usage_hash.reject do |action, count|
-          count.positive? || action.end_with?('?') || action.end_with?('!') || action.end_with?('=')
+          count > 0 || action.end_with?('?') || action.end_with?('!') || action.end_with?('=')
         end
 
         unused_actions_from_hash.keys.map do |action|
           controller_name, action_name = action.split('#', 2)
-          controller = controller_class_by_name(controller_name)&.new
-          method = controller.method(action_name.to_sym)
-          if method&.source_location && method.source_location.first.start_with?(root)
+          controller_class = controller_class_by_name(controller_name)
+          controller = controller_class && controller_class.new
+          method = controller && controller.method(action_name.to_sym)
+          if method && method.source_location && method.source_location.first.start_with?(root)
             "#{method.source_location.first.sub(root, '')}:#{method.source_location.second} - #{action}"
           else
             action

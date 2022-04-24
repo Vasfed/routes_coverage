@@ -18,12 +18,17 @@ describe "Minitest coverage" do
     [output, $CHILD_STATUS]
   end
 
+  def app_testfile_path(testfile)
+    # ruby 1.9 does not have __dir__
+    File.expand_path("../fixtures/#{testfile}", __FILE__)
+  end
+
   def run_dummy_test(testfile = 'dummy_test.rb')
-    run_cmd("bundle exec ruby #{__dir__}/fixtures/#{testfile}")
+    run_cmd("bundle exec ruby #{app_testfile_path(testfile)}")
   end
 
   def run_dummy_rspec(testfile = 'dummy_rspec.rb')
-    run_cmd("bundle exec rspec #{__dir__}/fixtures/#{testfile}")
+    run_cmd("bundle exec rspec #{app_testfile_path(testfile)}")
   end
 
   it "works" do
@@ -134,11 +139,11 @@ describe "Minitest coverage" do
     assert_includes(res, "Controller subdomain_route looks not existing")
 
     expected_count = 6
-    expected_output = <<~TXT
-      dummy: create, except: %i[new create show edit destroy], only: %i[index update] ,  Missing custom: some_custom, not_found_error
-      somespace/foo: index, except: %i[index new create show edit update destroy], only: %i[]
-      otherspace/bar: index, except: %i[index new create show edit update destroy], only: %i[]
-      subdomain_route: index, except: %i[index new create show edit update destroy], only: %i[]
+    expected_output = <<-TXT
+dummy: create, except: %i[new create show edit destroy], only: %i[index update] ,  Missing custom: some_custom, not_found_error
+somespace/foo: index, except: %i[index new create show edit update destroy], only: %i[]
+otherspace/bar: index, except: %i[index new create show edit update destroy], only: %i[]
+subdomain_route: index, except: %i[index new create show edit update destroy], only: %i[]
     TXT
 
     if res.include?('Controller rails/welcome failed to load') # rails 7 has bug

@@ -55,7 +55,7 @@ module RoutesCoverage
       end
 
       def asset_content(name)
-        File.read(File.expand_path("../../../compiled_assets/#{name}", __dir__))
+        File.read(File.expand_path("../../../../compiled_assets/#{name}", __FILE__))
       end
 
       def style_asset_link
@@ -87,7 +87,7 @@ module RoutesCoverage
       end
 
       def hits_css_class(hits)
-        hits.positive? ? 'cov' : 'uncov'
+        hits > 0 ? 'cov' : 'uncov'
       end
 
       def timeago(time)

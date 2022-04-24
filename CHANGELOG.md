@@ -2,7 +2,7 @@
 
 ## Unreleased
 
--
+- Bring back support for ruby 1.9
 
 ## 0.7.0 - April 24, 2022
 - Support for Rails 7 (added tests, main code was already working)

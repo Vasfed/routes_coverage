@@ -2,7 +2,7 @@
 
 require_relative 'dummy_app'
 DummyApplication.routes.draw do
-  resources :reqs, only: %i[index update], controller: :dummy do
+  resources :reqs, only: [:index, :update], controller: :dummy do
     post :current, on: :collection
   end
 

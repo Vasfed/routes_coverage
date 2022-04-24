@@ -8,15 +8,16 @@ jobs:
       matrix:
         # lockfiles are not commited, so autodetection will not work, need to specify bundler version
         include:
-          - ruby-version: 2.3.8
+          - ruby-version: 1.9.3
             rails-version: 3
-            bundler-version: 1.17.3
+            bundler-version: "1.17.3"
+
           - ruby-version: 2.3.8
             rails-version: 40
-            bundler-version: 1.17.3
+            bundler-version: "1.17.3"
           - ruby-version: 2.3.8
             rails-version: 42
-            bundler-version: 1.17.3
+            bundler-version: "1.17.3"
 
           - ruby-version: 2.3.8
             rails-version: 50_rspec
@@ -36,8 +37,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@master
+      - name: Disable broken ssl for legacy ruby
+        run: |
+          echo :ssl_verify_mode: 0 >> ~/.gemrc
+          echo gem: --no-ri --no-rdoc >> ~/.gemrc
+          echo "RUBYGEMS_HOST=http://rubygems.org" >> $GITHUB_ENV
+        if: matrix.ruby-version == '1.9.3'
       - name: Install ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@master
         with:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true

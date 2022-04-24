@@ -4,5 +4,11 @@ source "https://rubygems.org"
 
 gem "rails", "~>3.2.22"
 gem "test-unit"
+gem 'rake', '~> 11.3'
+gem 'concurrent-ruby', '1.1.9'
+gem 'rack-cache', '1.7.0'
+gem 'thor', '0.20.3'
+gem 'appraisal', '2.2.0'
+gem 'minitest', '5.11.3'
 
 gemspec path: "../"
