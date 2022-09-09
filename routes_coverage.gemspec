@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-lib = File.expand_path('lib', __dir__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'routes_coverage/version'
+require_relative './lib/routes_coverage/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "routes_coverage"
@@ -16,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = "https://github.com/Vasfed/routes_coverage"
   spec.license       = "MIT"
 
-  spec.required_ruby_version = ">= 1.9"
+  spec.required_ruby_version = ">= 1.9.2"
 
   spec.files = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features|assets|bin|gemfiles)/}) ||

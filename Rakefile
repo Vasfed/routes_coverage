@@ -20,7 +20,6 @@ Rake::TestTask.new(:dummytest_controller) { |t| t.pattern = 'spec/fixtures/dummy
 
 task default: :spec
 
-$LOAD_PATH.push File.expand_path('lib', __dir__)
 require 'routes_coverage/version'
 
 namespace :assets do
