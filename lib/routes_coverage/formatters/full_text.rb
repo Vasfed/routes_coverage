@@ -49,8 +49,8 @@ module RoutesCoverage
             # unwrap SimpleDelegator
             original_route = r[:original].respond_to?(:__getobj__) ? r[:original].__getobj__ : r[:original]
 
-            "#{r[:name].rjust(name_width) if @output_prefix} "\
-              "#{r[:verb].ljust(verb_width)} #{r[:path].ljust(path_width)} #{r[:reqs].ljust(reqs_width)}"\
+            "#{r[:name].rjust(name_width) if @output_prefix} " \
+              "#{r[:verb].ljust(verb_width)} #{r[:path].ljust(path_width)} #{r[:reqs].ljust(reqs_width)}" \
               "#{" #{@result.route_hit_counts[original_route]}" if @output_hits}"
           end
         end
@@ -68,7 +68,7 @@ module RoutesCoverage
         end
 
         def widths(routes)
-          [:name, :verb, :path, :reqs].map do |key|
+          %i[name verb path reqs].map do |key|
             routes.map { |r| r[key].length }.max.to_i
           end
         end
@@ -99,9 +99,9 @@ module RoutesCoverage
         hit_routes = collect_routes(result.hit_routes)
         pending_routes = collect_routes(result.pending_routes)
 
-        "#{routes_section(RouteFormatter.new(result, settings).with_hits, 'Covered routes:', hit_routes)}\n"\
-        "\n"\
-        "#{routes_section(RouteFormatter.new(result, settings), 'Pending routes:', pending_routes)}"
+        "#{routes_section(RouteFormatter.new(result, settings).with_hits, 'Covered routes:', hit_routes)}\n" \
+          "\n" \
+          "#{routes_section(RouteFormatter.new(result, settings), 'Pending routes:', pending_routes)}"
       end
 
       def format

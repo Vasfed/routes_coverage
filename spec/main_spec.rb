@@ -139,12 +139,14 @@ describe "Minitest coverage" do
     assert_includes(res, "Controller subdomain_route looks not existing")
 
     expected_count = 6
+    # rubocop:disable Layout/HeredocIndentation
     expected_output = <<-TXT
 dummy: create, except: %i[new create show edit destroy], only: %i[index update] ,  Missing custom: some_custom, not_found_error
 somespace/foo: index, except: %i[index new create show edit update destroy], only: %i[]
 otherspace/bar: index, except: %i[index new create show edit update destroy], only: %i[]
 subdomain_route: index, except: %i[index new create show edit update destroy], only: %i[]
     TXT
+    # rubocop:enable Layout/HeredocIndentation
 
     if res.include?('Controller rails/welcome failed to load') # rails 7 has bug
       expected_count = 7

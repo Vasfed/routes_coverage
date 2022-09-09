@@ -96,7 +96,7 @@ module RoutesCoverage
 
         routes_groups = all_routes.group_by do |r|
           # rails <=4 has regex in verb
-          verb = r.verb.is_a?(Regexp) && r.verb.inspect.gsub(/[^\w]/, '') || r.verb
+          verb = (r.verb.is_a?(Regexp) && r.verb.inspect.gsub(/[^\w]/, '')) || r.verb
           (
             ("#{verb} #{r.path.spec}".strip =~ filter_regex) ||
             (r.path.spec.to_s =~ namespaces_regex)

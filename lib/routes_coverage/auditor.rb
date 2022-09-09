@@ -125,27 +125,24 @@ module RoutesCoverage
       # NB: for singular `resource` there may be unnecessary `index` in suggestions
       restful_actions = %w[index new create show edit update destroy].freeze
 
-      declared_restful = all_routes.select { |route|
+      declared_restful = all_routes.select do |route|
         route.respond_to?(:requirements) && route.requirements[:controller] &&
-        restful_actions.include?(route.requirements[:action])
-      }.group_by{ |route| route.requirements[:controller]}
+          restful_actions.include?(route.requirements[:action])
+      end.group_by { |route| route.requirements[:controller] }
 
       missing_actions.keys.map { |action| action.split('#', 2) }.group_by(&:first).each do |(controller, actions)|
         missing = actions.map(&:last)
         next if missing.empty?
 
-        undeclared_restful = restful_actions - declared_restful[controller].map{|r| r.requirements[:action] }
+        undeclared_restful = restful_actions - declared_restful[controller].map { |r| r.requirements[:action] }
         logger.info([
           "#{controller}:",
           (if (restful_actions & missing).any?
-            "#{(missing & restful_actions).join(', ')}"\
-            ", except: %i[#{(restful_actions & (missing + undeclared_restful)).join(' ')}]"\
-            ", only: %i[#{(restful_actions - (missing + undeclared_restful)).join(' ')}]"
-          end),
-          (if (missing - restful_actions).any?
-            ",  Missing custom: #{(missing - restful_actions).join(', ')}"
-          end)
-
+             "#{(missing & restful_actions).join(', ')}" \
+               ", except: %i[#{(restful_actions & (missing + undeclared_restful)).join(' ')}]" \
+               ", only: %i[#{(restful_actions - (missing + undeclared_restful)).join(' ')}]"
+           end),
+          (",  Missing custom: #{(missing - restful_actions).join(', ')}" if (missing - restful_actions).any?)
         ].compact.join(' '))
       end
     end

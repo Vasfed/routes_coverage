@@ -28,7 +28,7 @@ end
 
 class DummyRequestTest < ActionDispatch::IntegrationTest
   def test_coverage_enabled
-    assert(RoutesCoverage.enabled?)
+    assert_predicate(RoutesCoverage, :enabled?)
   end
 
   def test_patch
