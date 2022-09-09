@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-lib = File.expand_path('../lib', __FILE__)
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'routes_coverage/version'
 
@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["vasilyfedoseyev@gmail.com"]
 
   spec.summary       = "Provides coverage report for your rails routes"
-  spec.description   = "Generates coverage report for routes hit by your request/integration/feature tests "\
+  spec.description   = "Generates coverage report for routes hit by your request/integration/feature tests " \
                        "including capybara ones"
   spec.homepage      = "https://github.com/Vasfed/routes_coverage"
   spec.license       = "MIT"
@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency 'appraisal'
-  spec.add_development_dependency "bundler" #, ">= 2.2.10"
+  spec.add_development_dependency "bundler" # , ">= 2.2.10"
   spec.add_development_dependency "minitest"
   spec.add_development_dependency "rake", ">= 12.3.3"
 end

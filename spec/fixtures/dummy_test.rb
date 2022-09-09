@@ -10,7 +10,7 @@ RoutesCoverage.settings.format = :summary_text
 
 class DummyRequestTest < ActionDispatch::IntegrationTest
   def test_coverage_enabled
-    assert(RoutesCoverage.enabled?)
+    assert_predicate(RoutesCoverage, :enabled?)
   end
 
   def test_index

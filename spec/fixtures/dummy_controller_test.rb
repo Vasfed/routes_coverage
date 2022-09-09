@@ -18,7 +18,7 @@ class DummyControllerTest < ActionController::TestCase
   setup { @routes = Rails.application.routes }
 
   def test_index_working
-    assert(RoutesCoverage.enabled?)
+    assert_predicate(RoutesCoverage, :enabled?)
     get :index
     assert_response :success
   end

@@ -6,7 +6,7 @@ require:
 AllCops:
   NewCops: enable
   # 2.0 was dropped in rubocop 0.50
-  # TargetRubyVersion: 2.0
+  TargetRubyVersion: 2.1
   Exclude:
     - gemfiles/*
 
@@ -27,10 +27,14 @@ Rails/RenderInline: { Enabled: false }
 Rails/ApplicationController: { Enabled: false }
 
 Metrics/BlockLength:
+  Max: 30
   Exclude:
     - spec/*
-
-Metrics/MethodLength: { Max: 25 }
+Metrics/MethodLength: { Max: 30 }
+Metrics/ModuleLength: { Max: 150 }
+Metrics/ClassLength: { Max: 150 }
 Metrics/AbcSize: { Enabled: false }
 Metrics/CyclomaticComplexity: { Max: 15 }
 Metrics/PerceivedComplexity: { Max: 15 }
+
+Style/HashConversion: { Enabled: false } # ruby 2.0 does not have ary.to_h

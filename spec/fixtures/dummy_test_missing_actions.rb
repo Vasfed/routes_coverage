@@ -4,7 +4,7 @@ require_relative 'dummy_app'
 require 'routes_coverage/auditor'
 
 DummyApplication.routes.draw do
-  resources :reqs, only: [:index, :update, :create], controller: :dummy do
+  resources :reqs, only: %i[index update create], controller: :dummy do
     post :current, on: :collection
     get :some_custom
   end
@@ -21,7 +21,5 @@ DummyApplication.routes.draw do
 
   get 'r*catch_almost_all_route', to: 'dummy#not_found_error'
 end
-
-
 
 RoutesCoverage::Auditor.new.print_missing_actions

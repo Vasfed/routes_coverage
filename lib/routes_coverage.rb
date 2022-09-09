@@ -20,7 +20,7 @@ module RoutesCoverage
 
   module ActionControllerTestCaseKvargs
     if RUBY_VERSION >= '2'
-      class_eval <<-RUBY, __FILE__, __LINE__+1
+      class_eval <<-RUBY, __FILE__, __LINE__ + 1
         def process(action, **kvargs)
           return super unless RoutesCoverage.settings.include_from_controller_tests
 
