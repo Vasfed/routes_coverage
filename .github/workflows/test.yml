@@ -8,30 +8,22 @@ jobs:
       matrix:
         # lockfiles are not commited, so autodetection will not work, need to specify bundler version
         include:
-          - ruby-version: 1.9.3
-            rails-version: 3
-            bundler-version: "1.17.3"
-
-          - ruby-version: 2.3.8
-            rails-version: 40
-            bundler-version: "1.17.3"
-          - ruby-version: 2.3.8
-            rails-version: 42
-            bundler-version: "1.17.3"
-
-          - ruby-version: 2.3.8
+          - ruby-version: 2.4
             rails-version: 50_rspec
             bundler-version: default
-          - ruby-version: 2.6.9
+          - ruby-version: 2.6
             rails-version: 50_simplecov
             bundler-version: default
-          - ruby-version: 2.7.5
+          - ruby-version: 2.7
             rails-version: 6
             bundler-version: default
-          - ruby-version: 3.1.2
+          - ruby-version: 3.1
             rails-version: 7
             bundler-version: default
-    continue-on-error: ${{ matrix.ruby-version == '1.9.3' }}
+          - ruby-version: 4.0
+            rails-version: 8
+            bundler-version: default
+    continue-on-error: ${{ matrix.ruby-version == '1.9' }}
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/rails_${{ matrix.rails-version }}.gemfile
 
@@ -42,7 +34,7 @@ jobs:
           echo :ssl_verify_mode: 0 >> ~/.gemrc
           echo gem: --no-ri --no-rdoc >> ~/.gemrc
           echo "RUBYGEMS_HOST=http://rubygems.org" >> $GITHUB_ENV
-        if: matrix.ruby-version == '1.9.3'
+        if: matrix.ruby-version == '1.9'
       - name: Install ruby
         uses: ruby/setup-ruby@master
         with:

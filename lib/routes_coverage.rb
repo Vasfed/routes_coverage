@@ -223,7 +223,8 @@ end
 require "routes_coverage/adapters/rspec" if defined? RSpec
 
 if RoutesCoverage.enabled?
-  if defined?(SimpleCov) && SimpleCov.running
+  if defined?(SimpleCov) &&
+    ((SimpleCov.respond_to?(:running) && SimpleCov.running) || SimpleCov.respond_to?(:running?) && SimpleCov.running?)
     require 'routes_coverage/adapters/simplecov'
     RoutesCoverage::Adapters::SimpleCov.use
   elsif defined? RSpec
