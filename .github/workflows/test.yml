@@ -31,6 +31,9 @@ jobs:
           - ruby-version: 3.1.2
             rails-version: 7
             bundler-version: default
+          - ruby-version: 4.0.10
+            rails-version: 8
+            bundler-version: default
     continue-on-error: ${{ matrix.ruby-version == '1.9.3' }}
     env:
       BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/rails_${{ matrix.rails-version }}.gemfile
